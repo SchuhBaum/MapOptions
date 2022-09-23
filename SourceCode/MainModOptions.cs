@@ -52,7 +52,7 @@ namespace MapOptions
 
             // Subtitle
             AddNewLine(0.5f);
-            AddTextLabel("Version " + MainMod.instance?.Version, FLabelAlignment.Left);
+            AddTextLabel("Version " + MainMod.instance?.Info.Metadata.Version, FLabelAlignment.Left);
             AddTextLabel("by " + MainMod.instance?.author, FLabelAlignment.Right);
             DrawTextLabels(ref Tabs[tabIndex]);
 
