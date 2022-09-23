@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace MapOptions
 {
     internal static class HUDMod
@@ -15,10 +13,9 @@ namespace MapOptions
 
         private static void HUD_ResetMap(On.HUD.HUD.orig_ResetMap orig, HUD.HUD hud, HUD.Map.MapData mapData)
         {
-            if (hud.map != null)
+            if (hud.map?.GetAttachedFields() is MapMod.AttachedFields attachedFields)
             {
-                Debug.Log("MapOptions: Map is being deleted. Cleanup.");
-                MapMod.Destroy(hud.map);
+                MapMod.ClearAttachedFields(attachedFields);
             }
             orig(hud, mapData);
         }

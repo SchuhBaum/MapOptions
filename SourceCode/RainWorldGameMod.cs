@@ -34,14 +34,19 @@ namespace MapOptions
                 AbstractRoomMod.OnEnable(); // when slugcat is added to an abstract room
                 RegionGateMod.OnEnable(); // the room stays the same // wait a bit and add the room again to be uncovered in the new region as well
             }
-
             orig(game, manager);
         }
 
         private static void RainWorldGame_ShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame game)
         {
-            Debug.Log("MapOptions: Remove option specific hooks.");
+            Debug.Log("MapOptions: Cleanup. Remove option specific hooks.");
             orig(game);
+
+            foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
+            {
+                MapMod.ClearAttachedFields(attachedFields);
+            }
+            MapMod.allAttachedFields.Clear();
 
             if (MainMod.creatureSymbolsOption)
             {

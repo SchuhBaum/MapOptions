@@ -8,15 +8,24 @@ namespace MapOptions
         public readonly IconSymbol.IconSymbolData iconData;
 
         public AbstractRoom AbstractRoom => abstractCreature.Room;
-        public Color Color { get; private set; }
-        public CreatureSymbol? CreatureSymbol { get; private set; }
+        public Color Color
+        {
+            get; private set;
+        }
+        public CreatureSymbol? CreatureSymbol
+        {
+            get; private set;
+        }
 
         public bool IsCreatureDead => abstractCreature.state.dead;
         public bool IsCreatureInDen => abstractCreature.InDen || abstractCreature.Room.offScreenDen;
 
         public bool? IsVisible
         {
-            get { return CreatureSymbol?.symbolSprite?.isVisible; }
+            get
+            {
+                return CreatureSymbol?.symbolSprite?.isVisible;
+            }
             set
             {
                 if (value != null && CreatureSymbol?.symbolSprite is FSprite symbolSprite)
@@ -101,7 +110,7 @@ namespace MapOptions
                 {
                     CreatureSymbol.myColor = new Color(1f, 1f, 1f);
                 }
-                
+
                 CreatureSymbol.symbolSprite.alpha = map.Alpha(abstractRoom.layer, timeStacker, false);
                 CreatureSymbol.Draw(timeStacker, map.RoomToMapPos(inRoomPos, abstractRoom.index, timeStacker));
             }
@@ -113,7 +122,7 @@ namespace MapOptions
             {
                 return abstractCreature.Equals(creatureSymbolPair.abstractCreature) && CreatureSymbol.Equals(creatureSymbolPair.CreatureSymbol);
             }
-                
+
             if (CreatureSymbol == null && creatureSymbolPair.CreatureSymbol == null)
             {
                 return abstractCreature.Equals(creatureSymbolPair.abstractCreature);

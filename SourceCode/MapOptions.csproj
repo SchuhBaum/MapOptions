@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net350</TargetFramework>
-    <Version>0.54</Version>
+    <TargetFramework>net35</TargetFramework>
+    <Version>0.55</Version>
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>
   </PropertyGroup>

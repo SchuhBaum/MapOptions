@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 0.54
+###### Version: 0.55
 
 ### Description
 This mod adds options to configure the map.  
@@ -50,8 +50,9 @@ v0.50:
 - Various changes to support multiple maps / cameras.
 - Added an option to increase the reveal speed. Default value is one. The option instant reveal is removed or rather included in this one.
 
-v0.54:
+v0.55:
 - Fixed two bugs where variables were not deleted properly.
 - Restructered code.
 - Uncover room option should be more reliable now.
 - Switched to BepInEx plugin.
+- Restructured code. Fixed a bug where creature symbols were not cleared.

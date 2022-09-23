@@ -25,9 +25,9 @@ namespace MapOptions
             orig(abstractCreature, world, creatureTemplate, realizedCreature, pos, ID);
             if (!creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
             {
-                foreach (HUD.Map map in MapMod.creatureSymbolList.Keys)
+                foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
                 {
-                    MapMod.creatureSymbolList[map].Add(new CreatureSymbolPair(abstractCreature));
+                    attachedFields.creatureSymbolList.Add(new CreatureSymbolPair(abstractCreature));
                 }
             }
         }

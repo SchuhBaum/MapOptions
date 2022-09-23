@@ -23,14 +23,14 @@ namespace MapOptions
         {
             if (player.objectInStomach is AbstractCreature abstractCreature)
             {
-                foreach (HUD.Map map in MapMod.creatureSymbolList.Keys)
+                foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
                 {
-                    foreach (CreatureSymbolPair creatureSymbolPair_ in MapMod.creatureSymbolList[map].ToArray())
+                    foreach (CreatureSymbolPair creatureSymbolPair in attachedFields.creatureSymbolList)
                     {
-                        if (creatureSymbolPair_.abstractCreature == abstractCreature)
+                        if (creatureSymbolPair.abstractCreature == abstractCreature)
                         {
-                            creatureSymbolPair_.RemoveSprites();
-                            MapMod.creatureSymbolList[map].Remove(creatureSymbolPair_);
+                            creatureSymbolPair.RemoveSprites();
+                            attachedFields.creatureSymbolList.Remove(creatureSymbolPair);
                             break;
                         }
                     }
@@ -42,35 +42,14 @@ namespace MapOptions
         // private functions //
         // ----------------- //
 
-        //private static void Player_ctor(On.Player.orig_ctor orig, Player player, AbstractCreature abstractCreature, World world)
-        //{
-        //    orig(player, abstractCreature, world);
-        //    if (MainMod.slugcatSymbolsEnabled)
-        //    {
-        //        int playerNumber = player.playerState.playerNumber;
-        //        foreach (HUD.Map map in MapMod.slugcatSymbols.Keys)
-        //        {
-        //            if (MapMod.slugcatSymbols[map][playerNumber] is CreatureSymbolPair creatureSymbolPair)
-        //            {
-        //                creatureSymbolPair.RemoveSprites();
-        //            }
-        //            MapMod.slugcatSymbols[map][playerNumber] = new CreatureSymbolPair(player.abstractCreature);
-        //        }
-        //    }
-        //    RemoveObjectInStomachSymbol(player);
-        //}
-
         private static void Player_Regurgitate(On.Player.orig_Regurgitate orig, Player player)
         {
             if (player.objectInStomach is AbstractCreature abstractCreature && !AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
             {
-                CreatureSymbolPair creatureSymbolPair = new CreatureSymbolPair(abstractCreature);
-                foreach (HUD.Map map in MapMod.creatureSymbolList.Keys)
+                CreatureSymbolPair creatureSymbolPair = new(abstractCreature);
+                foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
                 {
-                    if (!MapMod.creatureSymbolList[map].Contains(creatureSymbolPair)) // what is needed for creatureSymbol to be considered equal? // does visibility matter?
-                    {
-                        MapMod.creatureSymbolList[map].Add(creatureSymbolPair);
-                    }
+                    attachedFields.creatureSymbolList.Add(creatureSymbolPair);
                 }
             }
             orig(player);
