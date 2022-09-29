@@ -17,7 +17,6 @@ namespace MapOptions
         private static void RainWorldGame_ctor(On.RainWorldGame.orig_ctor orig, RainWorldGame game, ProcessManager manager)
         {
             Debug.Log("MapOptions: Add option specific hooks.");
-
             if (MainMod.creatureSymbolsOption)
             {
                 AbstractCreatureMod.OnEnable();
@@ -39,14 +38,8 @@ namespace MapOptions
 
         private static void RainWorldGame_ShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame game)
         {
-            Debug.Log("MapOptions: Cleanup. Remove option specific hooks.");
+            Debug.Log("MapOptions: Remove option specific hooks.");
             orig(game);
-
-            foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
-            {
-                MapMod.ClearAttachedFields(attachedFields);
-            }
-            MapMod.allAttachedFields.Clear();
 
             if (MainMod.creatureSymbolsOption)
             {

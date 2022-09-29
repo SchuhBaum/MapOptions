@@ -22,21 +22,11 @@ namespace MapOptions
         // variables
         //
 
-        public sealed class AttachedFields
-        {
-            public bool hasMapClosed;
-            public bool hasMapLoaded;
-            public readonly List<CreatureSymbolPair> creatureSymbolList = new();
-            public readonly List<CreatureSymbolPair> slugcatSymbols = new();
-        }
         internal static readonly Dictionary<HUD.Map, AttachedFields> allAttachedFields = new();
-        public static AttachedFields? GetAttachedFields(this HUD.Map map)
+        public static AttachedFields? TryGetAttachedFields(this HUD.Map map)
         {
-            if (map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player)
-            {
-                return null;
-            }
-            return allAttachedFields[map];
+            allAttachedFields.TryGetValue(map, out AttachedFields? attachedFields);
+            return attachedFields;
         }
 
         public static List<AbstractRoom> uncoveredRooms = new();
@@ -61,30 +51,9 @@ namespace MapOptions
         // public functions //
         // ---------------- //
 
-        public static void ClearAttachedFields(AttachedFields attachedFields)
-        {
-            for (int creatureIndex = attachedFields.creatureSymbolList.Count - 1; creatureIndex >= 0; --creatureIndex)
-            {
-                attachedFields.creatureSymbolList[creatureIndex].RemoveSprites();
-                attachedFields.creatureSymbolList.RemoveAt(creatureIndex);
-            }
-
-            for (int slugcatIndex = attachedFields.slugcatSymbols.Count - 1; slugcatIndex >= 0; --slugcatIndex)
-            {
-                attachedFields.slugcatSymbols[slugcatIndex].RemoveSprites();
-                attachedFields.slugcatSymbols.RemoveAt(slugcatIndex);
-            }
-
-            attachedFields.hasMapClosed = false;
-            attachedFields.hasMapLoaded = false;
-        }
-
         public static void UncoverRoom(HUD.Map map, AbstractRoom abstractRoom)
         {
-            if (map.discoverTexture == null)
-            {
-                return;
-            }
+            if (map.discoverTexture == null) return;
 
             IntVector2 startPosition = IntVector2.FromVector2(map.OnTexturePos(new Vector2(0.0f, 0.0f), abstractRoom.index, accountForLayer: true) / map.DiscoverResolution);
             IntVector2 endPosition = IntVector2.FromVector2(map.OnTexturePos(abstractRoom.size.ToVector2() * 20f, abstractRoom.index, accountForLayer: true) / map.DiscoverResolution);
@@ -127,32 +96,32 @@ namespace MapOptions
 
         private static void HUD_Map_ClearSprites(On.HUD.Map.orig_ClearSprites orig, HUD.Map map)
         {
+            // I am confused
+            // this function detaches / deletes inFrontContainer and other suff; but does not destroys map like HUD.ResetMap() does
+            // inFrontContainer is only set in ctor => map is an empty hull(?) anyways
+            // maybe there are NullRef problems otherwise
             orig(map);
-            AttachedFields? attachedFields = map.GetAttachedFields();
+            if (map.TryGetAttachedFields() is not AttachedFields attachedFields) return;
 
-            if (attachedFields == null)
+            foreach (CreatureSymbolOnMap creatureSymbol in attachedFields.creatureSymbols)
             {
-                return;
+                creatureSymbol.RemoveSprites();
             }
 
-            foreach (CreatureSymbolPair creatureSymbolPair in attachedFields.creatureSymbolList)
+            foreach (CreatureSymbolOnMap slugcatSymbol in attachedFields.slugcatSymbols)
             {
-                creatureSymbolPair.RemoveSprites();
+                slugcatSymbol.RemoveSprites();
             }
 
-            foreach (CreatureSymbolPair slugcatSymbolPair in attachedFields.slugcatSymbols)
-            {
-                slugcatSymbolPair.RemoveSprites();
-            }
+            attachedFields.creatureSymbols.Clear();
+            attachedFields.slugcatSymbols.Clear();
+            allAttachedFields.Remove(map);
         }
 
         private static void HUD_Map_ctor(On.HUD.Map.orig_ctor orig, HUD.Map map, HUD.HUD hud, HUD.Map.MapData mapData)
         {
             orig(map, hud, mapData);
-            if (map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player)
-            {
-                return;
-            }
+            if (map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player) return;
 
             AttachedFields attachedFields = new();
             if (map.hud.rainWorld.processManager.currentMainLoop is RainWorldGame game && game.IsStorySession)
@@ -162,19 +131,21 @@ namespace MapOptions
                 {
                     foreach (AbstractRoom abstractRoom in game.world.abstractRooms)
                     {
+                        // not in dens
+                        foreach (AbstractCreature abstractCreature in abstractRoom.creatures)
+                        {
+                            if (!AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
+                            {
+                                attachedFields.creatureSymbols.Add(new CreatureSymbolOnMap(abstractCreature, map.inFrontContainer));
+                            }
+                        }
+
+                        // in dens
                         foreach (AbstractWorldEntity abstractWorldEntity in abstractRoom.entitiesInDens)
                         {
                             if (abstractWorldEntity is AbstractCreature abstractCreature && !AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
                             {
-                                attachedFields.creatureSymbolList.Add(new CreatureSymbolPair(abstractCreature));
-                            }
-                        }
-
-                        foreach (AbstractWorldEntity abstractWorldEntity in abstractRoom.entities)
-                        {
-                            if (abstractWorldEntity is AbstractCreature abstractCreature && !AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
-                            {
-                                attachedFields.creatureSymbolList.Add(new CreatureSymbolPair(abstractCreature));
+                                attachedFields.creatureSymbols.Add(new CreatureSymbolOnMap(abstractCreature, map.inFrontContainer));
                             }
                         }
                     }
@@ -184,7 +155,7 @@ namespace MapOptions
                 {
                     foreach (AbstractCreature abstractPlayer in game.Players)
                     {
-                        attachedFields.slugcatSymbols.Add(new CreatureSymbolPair(abstractPlayer));
+                        attachedFields.slugcatSymbols.Add(new CreatureSymbolOnMap(abstractPlayer, map.inFrontContainer));
                         if (abstractPlayer.realizedCreature is Player player)
                         {
                             PlayerMod.RemoveObjectInStomachSymbol(player);
@@ -197,8 +168,7 @@ namespace MapOptions
 
         private static void HUD_Map_Draw(On.HUD.Map.orig_Draw orig, HUD.Map map, float timeStacker)
         {
-            AttachedFields? attachedFields = map.GetAttachedFields();
-            if (attachedFields == null || map.slatedForDeletion)
+            if (map.slatedForDeletion || map.TryGetAttachedFields() is not AttachedFields attachedFields)
             {
                 orig(map, timeStacker);
                 return;
@@ -250,39 +220,40 @@ namespace MapOptions
                 attachedFields.hasMapClosed = false;
                 if (MainMod.creatureSymbolsOption)
                 {
-                    Dictionary<AbstractRoom, List<CreatureSymbolPair>> creatureSymbolPerRoomList = new();
+                    Dictionary<AbstractRoom, List<CreatureSymbolOnMap>> creatureSymbolPerRoomList = new();
                     Dictionary<AbstractRoom, List<CreatureTemplate.Type>> creatureTypePerRoomList = new();
 
                     // sort creatures per room // only add one symbol of each creature type per room
-                    foreach (CreatureSymbolPair creatureSymbolPair in attachedFields.creatureSymbolList.ToArray())
+                    for (int symbolIndex = attachedFields.creatureSymbols.Count - 1; symbolIndex >= 0; --symbolIndex)
                     {
-                        if (creatureSymbolPair.IsCreatureDead) // don't show dead creatures
+                        CreatureSymbolOnMap creatureSymbol = attachedFields.creatureSymbols[symbolIndex];
+                        if (creatureSymbol.IsCreatureDead) // don't show dead creatures
                         {
-                            creatureSymbolPair.RemoveSprites();
-                            attachedFields.creatureSymbolList.Remove(creatureSymbolPair);
+                            creatureSymbol.RemoveSprites();
+                            attachedFields.creatureSymbols.RemoveAt(symbolIndex);
                         }
-                        else if (creatureSymbolPair.IsCreatureInDen)
+                        else if (creatureSymbol.IsCreatureInDen)
                         {
                             // hide creature in dens
-                            creatureSymbolPair.IsVisible = false;
+                            creatureSymbol.IsVisible = false;
                         }
-                        else if (creatureSymbolPair.AbstractRoom != null)
+                        else if (creatureSymbol.AbstractRoom != null)
                         {
-                            if (!creatureSymbolPerRoomList.ContainsKey(creatureSymbolPair.AbstractRoom))
+                            if (!creatureSymbolPerRoomList.ContainsKey(creatureSymbol.AbstractRoom))
                             {
-                                creatureSymbolPerRoomList.Add(creatureSymbolPair.AbstractRoom, new List<CreatureSymbolPair>());
-                                creatureTypePerRoomList.Add(creatureSymbolPair.AbstractRoom, new List<CreatureTemplate.Type>());
+                                creatureSymbolPerRoomList.Add(creatureSymbol.AbstractRoom, new List<CreatureSymbolOnMap>());
+                                creatureTypePerRoomList.Add(creatureSymbol.AbstractRoom, new List<CreatureTemplate.Type>());
                             }
 
-                            if (!creatureTypePerRoomList[creatureSymbolPair.AbstractRoom].Contains(creatureSymbolPair.abstractCreature.creatureTemplate.type))
+                            if (!creatureTypePerRoomList[creatureSymbol.AbstractRoom].Contains(creatureSymbol.abstractCreature.creatureTemplate.type))
                             {
-                                creatureSymbolPerRoomList[creatureSymbolPair.AbstractRoom].Add(creatureSymbolPair);
-                                creatureTypePerRoomList[creatureSymbolPair.AbstractRoom].Add(creatureSymbolPair.abstractCreature.creatureTemplate.type);
+                                creatureSymbolPerRoomList[creatureSymbol.AbstractRoom].Add(creatureSymbol);
+                                creatureTypePerRoomList[creatureSymbol.AbstractRoom].Add(creatureSymbol.abstractCreature.creatureTemplate.type);
                             }
                             else
                             {
                                 // might hide creature when they enter rooms
-                                creatureSymbolPair.IsVisible = false;
+                                creatureSymbol.IsVisible = false;
                             }
                         }
                     }
@@ -293,24 +264,19 @@ namespace MapOptions
                         float roomWidthPerCreature = map.mapData.SizeOfRoom(abstractRoom.index).x / (creatureSymbolPerRoomList[abstractRoom].Count + 1f);
                         for (int creatureSymbolIndex = 0; creatureSymbolIndex < creatureSymbolPerRoomList[abstractRoom].Count; ++creatureSymbolIndex)
                         {
-                            CreatureSymbolPair creatureSymbolPair = creatureSymbolPerRoomList[abstractRoom][creatureSymbolIndex];
+                            CreatureSymbolOnMap creatureSymbol = creatureSymbolPerRoomList[abstractRoom][creatureSymbolIndex];
                             Vector2 inRoomPos = new(roomWidthPerCreature * (creatureSymbolIndex + 1) * 20f, map.mapData.SizeOfRoom(abstractRoom.index).y * 10f);
                             IntVector2 onRevealTexturePos = IntVector2.FromVector2(map.OnTexturePos(inRoomPos, abstractRoom.index, true) / map.DiscoverResolution);
 
                             if (map.revealTexture.GetPixel(onRevealTexturePos.x, onRevealTexturePos.y).r < 0.5f)
                             {
                                 // hide symbols that are not revealed
-                                creatureSymbolPair.IsVisible = false;
+                                creatureSymbol.IsVisible = false;
                             }
                             else
                             {
-                                if (creatureSymbolPair.CreatureSymbol == null)
-                                {
-                                    creatureSymbolPair.CreateCreatureSymbol(map.inFrontContainer);
-                                }
-
-                                creatureSymbolPair.Draw(abstractRoom, map, timeStacker, inRoomPos);
-                                creatureSymbolPair.IsVisible = true;
+                                creatureSymbol.Draw(map, timeStacker, inRoomPos);
+                                creatureSymbol.IsVisible = true;
                             }
                         }
                     }
@@ -318,31 +284,26 @@ namespace MapOptions
 
                 if (MainMod.slugcatSymbolsOption)
                 {
-                    foreach (CreatureSymbolPair slugcatSymbolPair in attachedFields.slugcatSymbols)
+                    foreach (CreatureSymbolOnMap slugcatSymbol in attachedFields.slugcatSymbols)
                     {
-                        if (slugcatSymbolPair.abstractCreature.realizedCreature is Player player && player.room != null)
+                        if (slugcatSymbol.abstractCreature.realizedCreature is Player player && player.room != null)
                         {
-                            IntVector2 onRevealTexturePos = IntVector2.FromVector2(map.OnTexturePos(player.mainBodyChunk.pos, slugcatSymbolPair.AbstractRoom.index, true) / map.DiscoverResolution);
+                            IntVector2 onRevealTexturePos = IntVector2.FromVector2(map.OnTexturePos(player.mainBodyChunk.pos, slugcatSymbol.AbstractRoom.index, true) / map.DiscoverResolution);
                             if (map.revealTexture.GetPixel(onRevealTexturePos.x, onRevealTexturePos.y).r < 0.5f)
                             {
                                 // hide symbols that are not revealed // can only happen in multiplayer
-                                slugcatSymbolPair.IsVisible = false;
+                                slugcatSymbol.IsVisible = false;
                             }
                             else
                             {
-                                if (slugcatSymbolPair.CreatureSymbol == null)
-                                {
-                                    slugcatSymbolPair.CreateCreatureSymbol(map.inFrontContainer);
-                                }
-
-                                slugcatSymbolPair.Draw(slugcatSymbolPair.AbstractRoom, map, timeStacker, player.mainBodyChunk.pos - new Vector2(20f, 0.0f));
-                                slugcatSymbolPair.IsVisible = true;
+                                slugcatSymbol.Draw(map, timeStacker, player.mainBodyChunk.pos - new Vector2(20f, 0.0f));
+                                slugcatSymbol.IsVisible = true;
                             }
                         }
                         else
                         {
                             // hide non-realized player // like in jollycoop when they are dead and in offscreen den
-                            slugcatSymbolPair.IsVisible = false;
+                            slugcatSymbol.IsVisible = false;
                         }
                     }
                 }
@@ -350,22 +311,21 @@ namespace MapOptions
             else if (!attachedFields.hasMapClosed)
             {
                 attachedFields.hasMapClosed = true;
-                foreach (CreatureSymbolPair creatureSymbolPair in attachedFields.creatureSymbolList)
+                foreach (CreatureSymbolOnMap creatureSymbol in attachedFields.creatureSymbols)
                 {
-                    creatureSymbolPair.IsVisible = false;
+                    creatureSymbol.IsVisible = false;
                 }
 
-                foreach (CreatureSymbolPair slugcatSymbolPair in attachedFields.slugcatSymbols)
+                foreach (CreatureSymbolOnMap slugcatSymbol in attachedFields.slugcatSymbols)
                 {
-                    slugcatSymbolPair.IsVisible = false;
+                    slugcatSymbol.IsVisible = false;
                 }
             }
         }
 
         private static void HUD_Map_Update(On.HUD.Map.orig_Update orig, HUD.Map map)
         {
-            AttachedFields? attachedFields = map.GetAttachedFields();
-            if (attachedFields == null || map.slatedForDeletion)
+            if (map.slatedForDeletion || map.TryGetAttachedFields() is not AttachedFields attachedFields)
             {
                 orig(map);
                 return;
@@ -435,6 +395,18 @@ namespace MapOptions
                     }
                 }
             }
+        }
+
+        //
+        //
+        //
+
+        public sealed class AttachedFields
+        {
+            public bool hasMapClosed;
+            public bool hasMapLoaded;
+            public readonly List<CreatureSymbolOnMap> creatureSymbols = new();
+            public readonly List<CreatureSymbolOnMap> slugcatSymbols = new();
         }
     }
 }

@@ -19,8 +19,9 @@ namespace MapOptions
         private static void AbstractRoom_AddEntity(On.AbstractRoom.orig_AddEntity orig, AbstractRoom abstractRoom, AbstractWorldEntity abstractWorldEntity)
         {
             orig(abstractRoom, abstractWorldEntity);
+            if (abstractWorldEntity is not AbstractCreature abstractCreature) return;
 
-            if (abstractWorldEntity is AbstractCreature abstractCreature && abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Slugcat && !MapMod.uncoveredRooms.Contains(abstractRoom))
+            if (abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Slugcat && !MapMod.uncoveredRooms.Contains(abstractRoom))
             {
                 MapMod.uncoveredRooms.Add(abstractRoom);
             }
