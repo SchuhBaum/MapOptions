@@ -44,16 +44,7 @@ namespace MapOptions
             this.abstractCreature = abstractCreature ?? throw new System.ArgumentNullException("CreatureSymbolOnMap: AbstractCreature is null.");
             if (abstractCreature.realizedCreature is Player player)
             {
-                int playerNumber = player.playerState.playerNumber;
-                // copied from JollyCoop code
-                if (MainMod.IsJollyCoopEnabled && JollyCoop.JollyMod.config.enableColors[playerNumber])
-                {
-                    DefaultColor = JollyCoop.JollyMod.config.playerBodyColors[playerNumber];
-                }
-                else
-                {
-                    DefaultColor = PlayerGraphics.SlugcatColor(playerNumber);
-                }
+                DefaultColor = MainMod.IsJollyCoopEnabled ? GetJollyCoopColor(player.playerState.playerNumber) : PlayerGraphics.SlugcatColor(player.playerState.playerNumber);
                 myColor = DefaultColor;
             }
             else
@@ -84,6 +75,16 @@ namespace MapOptions
             myColor = abstractRoom.layer == map.layer ? DefaultColor : new Color(1f, 1f, 1f);
             symbolSprite.alpha = map.Alpha(abstractRoom.layer, timeStacker, false);
             Draw(timeStacker, map.RoomToMapPos(inRoomPos, abstractRoom.index, timeStacker));
+        }
+
+        // prevent JollyCoop from being a mandatory dependency
+        public Color GetJollyCoopColor(int playerNumber)
+        {
+            if (JollyCoop.JollyMod.config.enableColors[playerNumber])
+            {
+                return JollyCoop.JollyMod.config.playerBodyColors[playerNumber];
+            }
+            return PlayerGraphics.SlugcatColor(playerNumber);
         }
     }
 }

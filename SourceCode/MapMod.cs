@@ -262,10 +262,10 @@ namespace MapOptions
                     foreach (AbstractRoom abstractRoom in creatureSymbolPerRoomList.Keys)
                     {
                         float roomWidthPerCreature = map.mapData.SizeOfRoom(abstractRoom.index).x / (creatureSymbolPerRoomList[abstractRoom].Count + 1f);
-                        for (int creatureSymbolIndex = 0; creatureSymbolIndex < creatureSymbolPerRoomList[abstractRoom].Count; ++creatureSymbolIndex)
+                        for (int symbolIndex = 0; symbolIndex < creatureSymbolPerRoomList[abstractRoom].Count; ++symbolIndex)
                         {
-                            CreatureSymbolOnMap creatureSymbol = creatureSymbolPerRoomList[abstractRoom][creatureSymbolIndex];
-                            Vector2 inRoomPos = new(roomWidthPerCreature * (creatureSymbolIndex + 1) * 20f, map.mapData.SizeOfRoom(abstractRoom.index).y * 10f);
+                            CreatureSymbolOnMap creatureSymbol = creatureSymbolPerRoomList[abstractRoom][symbolIndex];
+                            Vector2 inRoomPos = new(roomWidthPerCreature * (symbolIndex + 1) * 20f, map.mapData.SizeOfRoom(abstractRoom.index).y * 10f);
                             IntVector2 onRevealTexturePos = IntVector2.FromVector2(map.OnTexturePos(inRoomPos, abstractRoom.index, true) / map.DiscoverResolution);
 
                             if (map.revealTexture.GetPixel(onRevealTexturePos.x, onRevealTexturePos.y).r < 0.5f)
