@@ -44,7 +44,7 @@ namespace MapOptions
             this.abstractCreature = abstractCreature ?? throw new System.ArgumentNullException("CreatureSymbolOnMap: AbstractCreature is null.");
             if (abstractCreature.realizedCreature is Player player)
             {
-                DefaultColor = MainMod.IsJollyCoopEnabled ? GetJollyCoopColor(player.playerState.playerNumber) : PlayerGraphics.SlugcatColor(player.playerState.playerNumber);
+                DefaultColor = MainMod.isJollyCoopEnabled ? GetJollyCoopColor(player.playerState.playerNumber) : PlayerGraphics.SlugcatColor(player.playerState.playerNumber);
                 myColor = DefaultColor;
             }
             else
