@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net35</TargetFramework>
-    <Version>0.58</Version>
+    <Version>0.59</Version>
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>
   </PropertyGroup>
@@ -13,7 +13,6 @@
     <Reference Include="..\..\references\ConfigMachine.dll"/>  
     <Reference Include="..\..\references\HOOKS-Assembly-CSharp.dll"/>
     <Reference Include="..\..\references\JollyCoop.dll"/>
-    <Reference Include="..\..\references\Partiality.dll"/>
     <Reference Include="..\..\references\UnityEngine.dll"/>
   </ItemGroup>
 

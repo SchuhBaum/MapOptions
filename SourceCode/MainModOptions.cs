@@ -34,7 +34,7 @@ namespace MapOptions
 
         private float CheckBoxWithSpacing => checkBoxSize + 0.25f * spacing;
 
-        public MainModOptions() : base(MainMod.instance) { }
+        public MainModOptions() : base(plugin: MainMod.instance) { }
 
         public override void Initialize()
         {

@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 0.58
+###### Version: 0.59
 
 ### Description
 This mod adds options to configure the map.  
@@ -50,7 +50,7 @@ v0.50:
 - Various changes to support multiple maps / cameras.
 - Added an option to increase the reveal speed. Default value is one. The option instant reveal is removed or rather included in this one.
 
-v0.58:
+v0.59:
 - Fixed two bugs where variables were not deleted properly.
 - Restructered code.
 - Uncover room option should be more reliable now.
@@ -59,3 +59,4 @@ v0.58:
 - Restructured code.
 - Fixed a bug where JollyCoop became a mandatory dependency.
 - Fixed a bug where the dependency checks would fail when using the modloader Realm.
+- (uncover room and uncover region options) Slightly increased the (reveal) area of rooms. Otherwise, some connections to other rooms might not get immediately uncovered.

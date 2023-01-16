@@ -55,8 +55,10 @@ namespace MapOptions
         {
             if (map.discoverTexture == null) return;
 
-            IntVector2 startPosition = IntVector2.FromVector2(map.OnTexturePos(new Vector2(0.0f, 0.0f), abstractRoom.index, accountForLayer: true) / map.DiscoverResolution);
-            IntVector2 endPosition = IntVector2.FromVector2(map.OnTexturePos(abstractRoom.size.ToVector2() * 20f, abstractRoom.index, accountForLayer: true) / map.DiscoverResolution);
+            // increase the area of rooms;
+            // otherwise some connections might not get immediately uncoverd;
+            IntVector2 startPosition = IntVector2.FromVector2(map.OnTexturePos(new Vector2(-60f, -60f), abstractRoom.index, accountForLayer: true) / map.DiscoverResolution);
+            IntVector2 endPosition = IntVector2.FromVector2(map.OnTexturePos(abstractRoom.size.ToVector2() * 20f + new Vector2(60f, 60f), abstractRoom.index, accountForLayer: true) / map.DiscoverResolution);
 
             if (map.discoverTexture.GetPixel(startPosition.x, startPosition.y).r == 0.0f ||
                 map.discoverTexture.GetPixel(startPosition.x, endPosition.y).r == 0.0f ||
