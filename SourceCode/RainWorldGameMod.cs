@@ -17,18 +17,20 @@ namespace MapOptions
         private static void RainWorldGame_ctor(On.RainWorldGame.orig_ctor orig, RainWorldGame game, ProcessManager manager)
         {
             Debug.Log("MapOptions: Add option specific hooks.");
-            if (MainMod.creatureSymbolsOption)
+            MainModOptions.instance.MainModOptions_OnConfigChanged();
+
+            if (MainMod.Option_CreatureSymbols)
             {
                 AbstractCreatureMod.OnEnable();
                 PlayerMod.OnEnable();
             }
 
-            if (MainMod.uncoverRegionOption)
+            if (MainMod.Option_UncoverRegion)
             {
                 WorldLoaderMod.OnEnable();
             }
 
-            if (MainMod.uncoverRoomOption)
+            if (MainMod.Option_UncoverRoom)
             {
                 AbstractRoomMod.OnEnable(); // when slugcat is added to an abstract room
                 RegionGateMod.OnEnable(); // the room stays the same // wait a bit and add the room again to be uncovered in the new region as well
@@ -41,18 +43,18 @@ namespace MapOptions
             Debug.Log("MapOptions: Remove option specific hooks.");
             orig(game);
 
-            if (MainMod.creatureSymbolsOption)
+            if (MainMod.Option_CreatureSymbols)
             {
                 AbstractCreatureMod.OnDisable();
                 PlayerMod.OnDisable();
             }
 
-            if (MainMod.uncoverRegionOption)
+            if (MainMod.Option_UncoverRegion)
             {
                 WorldLoaderMod.OnDisable();
             }
 
-            if (MainMod.uncoverRoomOption)
+            if (MainMod.Option_UncoverRoom)
             {
                 AbstractRoomMod.OnDisable();
                 RegionGateMod.OnDisable();

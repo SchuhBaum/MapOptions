@@ -1,40 +1,70 @@
 using System.Collections.Generic;
-using OptionalUI;
-using RWCustom;
+using Menu.Remix.MixedUI;
 using UnityEngine;
 
 namespace MapOptions
 {
     public class MainModOptions : OptionInterface
     {
-        private Vector2 marginX = new();
-        private Vector2 pos = new();
+        public static MainModOptions instance = new();
+
+        //
+        // options
+        //
+
+        public static Configurable<bool> creatureSymbols = instance.config.Bind("creatureSymbols", defaultValue: true, new ConfigurableInfo("Creature symbols are added to the map. These symbols display what creature types are present in each room.", null, "", "Creature Symbols"));
+        public static Configurable<bool> layerFocus = instance.config.Bind("layerFocus", defaultValue: false, new ConfigurableInfo("Only the active layer is displayed on the map.", null, "", "Layer Focus"));
+        public static Configurable<bool> skipFade = instance.config.Bind("skipFade", defaultValue: false, new ConfigurableInfo("Pressing the map button shows the map with no delay.", null, "", "Skip Fade In/Out"));
+
+        public static Configurable<bool> slugcatSymbols = instance.config.Bind("slugcatSymbols", defaultValue: true, new ConfigurableInfo("Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op is enabled, draws a sprite for each player.", null, "", "Slugcat Symbols"));
+        public static Configurable<bool> uncoverRegion = instance.config.Bind("uncoverRegion", defaultValue: false, new ConfigurableInfo("Once loaded into the game the whole region map gets uncovered.\nWARNING: This progress is saved (even without completing a cycle). Turning this option off after saving will *not* remove the gained progress.", null, "", "Uncover Region"));
+        public static Configurable<bool> uncoverRoom = instance.config.Bind("uncoverRoom", defaultValue: true, new ConfigurableInfo("When the player enters a room the whole room gets uncovered instead of just the area around slugcat.", null, "", "Uncover Room"));
+
+        public static Configurable<int> zoomSlider = instance.config.Bind("zoomSlider", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10) zoom. Each value (5-15) corresponds to 10*value% (50%-150%) zoom..", new ConfigAcceptableRange<int>(5, 15), "", "Zoom Level (10)"));
+        public static Configurable<int> creatureSymbolScale = instance.config.Bind("creatureSymbolScale", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new ConfigAcceptableRange<int>(5, 20), "", "Creature Symbol Size (10)"));
+        public static Configurable<int> slugcatSymbolScale = instance.config.Bind("slugcatSymbolScale", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new ConfigAcceptableRange<int>(5, 20), "", "Slugcat Symbol Size (10)"));
+        public static Configurable<int> revealSpeedMultiplier = instance.config.Bind("revealSpeedMultiplier", defaultValue: 1, new ConfigurableInfo("The default value is one. For a given value X the map is revealed X-times as fast.\nIf the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.", new ConfigAcceptableRange<int>(1, 10), "", "Reveal Speed Multiplier (1)"));
+
+        //
+        // parameters
+        //
+
+        private readonly float fontHeight = 20f;
         private readonly float spacing = 20f;
-
-        private readonly List<float> boxEndPositions = new();
-
         private readonly int numberOfCheckboxes = 3;
         private readonly float checkBoxSize = 24f;
-        private readonly List<OpCheckBox> checkBoxes = new();
+        private float CheckBoxWithSpacing => checkBoxSize + 0.25f * spacing;
+
+        //
+        // variables
+        //
+
+        private Vector2 marginX = new();
+        private Vector2 pos = new();
+        private readonly List<OpLabel> textLabels = new();
+        private readonly List<float> boxEndPositions = new();
+
+        private readonly List<Configurable<bool>> checkBoxConfigurables = new();
         private readonly List<OpLabel> checkBoxesTextLabels = new();
 
-        //private readonly List<OpComboBox> comboBoxes = new List<OpComboBox>();
-        //private readonly List<OpLabel> comboBoxesTextLabels = new List<OpLabel>();
-
-        private readonly List<string> sliderKeys = new();
-        private readonly List<IntVector2> sliderRanges = new();
-        private readonly List<int> sliderDefaultValues = new();
-        private readonly List<string> sliderDescriptions = new();
+        private readonly List<Configurable<int>> sliderConfigurables = new();
         private readonly List<string> sliderMainTextLabels = new();
         private readonly List<OpLabel> sliderTextLabelsLeft = new();
         private readonly List<OpLabel> sliderTextLabelsRight = new();
 
-        private readonly float fontHeight = 20f;
-        private readonly List<OpLabel> textLabels = new();
+        //
+        // main
+        //
 
-        private float CheckBoxWithSpacing => checkBoxSize + 0.25f * spacing;
+        public MainModOptions()
+        {
+            // ambiguity error // why? TODO
+            // OnConfigChanged += MainModOptions_OnConfigChanged;
+        }
 
-        public MainModOptions() : base(plugin: MainMod.instance) { }
+        //
+        // public
+        //
 
         public override void Initialize()
         {
@@ -42,7 +72,7 @@ namespace MapOptions
             Tabs = new OpTab[1];
 
             int tabIndex = 0;
-            Tabs[tabIndex] = new OpTab("Options");
+            Tabs[tabIndex] = new OpTab(instance, "Options");
             InitializeMarginAndPos();
 
             // Title
@@ -52,59 +82,43 @@ namespace MapOptions
 
             // Subtitle
             AddNewLine(0.5f);
-            AddTextLabel("Version " + MainMod.instance?.Info.Metadata.Version, FLabelAlignment.Left);
-            AddTextLabel("by " + MainMod.instance?.author, FLabelAlignment.Right);
+            AddTextLabel("Version " + MainMod.version, FLabelAlignment.Left);
+            AddTextLabel("by " + MainMod.author, FLabelAlignment.Right);
             DrawTextLabels(ref Tabs[tabIndex]);
 
             // Content //
             AddNewLine();
             AddBox();
 
-            AddSlider("zoomSlider", "Zoom Level (10)", "The default value is 100% (10) zoom. Each value (5-15) corresponds to 10*value% (50%-150%) zoom.", new IntVector2(5, 15), defaultValue: 10, "50%", "150%");
+            AddSlider(zoomSlider, (string)zoomSlider.info.Tags[0], "50%", "150%");
             DrawSliders(ref Tabs[tabIndex]);
 
             AddNewLine();
 
-            AddCheckBox("displayCreatureSymbols", "Creature Symbols", "Creature symbols are added to the map. These symbols display what creature types are present in each room.", defaultBool: true);
-            //AddCheckBox("instantReveal", "Instant Reveal", "Opening the map displays known areas instantly instead of revealing them gradually.", defaultBool: false);
-            AddCheckBox("showOnlyActiveLayer", "Layer Focus", "Only the active layer is displayed on the map.", defaultBool: false);
-            AddCheckBox("skipFade", "Skip Fade In/Out", "Pressing the map button shows the map with no delay.", defaultBool: false);
-            AddCheckBox("slugcatSymbols", "Slugcat Symbols", "Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op Mod is enabled, draws a sprite for each player.", defaultBool: true);
-            AddCheckBox("uncoverRegion", "Uncover Region", "Once loaded into the game the whole region map gets uncovered.\nWARNING: This progress is saved (even without completing a cycle). Turning this option off after saving will *not* remove the gained progress.", defaultBool: false);
-            AddCheckBox("uncoverRoom", "Uncover Room", "When the player enters a room the whole room gets uncovered instead of just the area around slugcat.", defaultBool: true);
+            AddCheckBox(creatureSymbols, (string)creatureSymbols.info.Tags[0]);
+            AddCheckBox(layerFocus, (string)layerFocus.info.Tags[0]);
+            AddCheckBox(skipFade, (string)skipFade.info.Tags[0]);
+            AddCheckBox(slugcatSymbols, (string)slugcatSymbols.info.Tags[0]);
+            AddCheckBox(uncoverRegion, (string)uncoverRegion.info.Tags[0]);
+            AddCheckBox(uncoverRoom, (string)uncoverRoom.info.Tags[0]);
             DrawCheckBoxes(ref Tabs[tabIndex]);
 
             AddNewLine();
 
-            AddSlider("creatureSymbolScale", "Creature Symbol Size (10)", "The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new IntVector2(5, 20), defaultValue: 10, "50%", "200%");
-            AddSlider("slugcatSymbolScale", "Slugcat Symbol Size (10)", "The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new IntVector2(5, 20), defaultValue: 10, "50%", "200%");
-            AddSlider("revealSpeedMultiplier", "Reveal Speed Multiplier (1)", "The default value is one. For a given value X the map is revealed X-times as fast.\nIf the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.", new IntVector2(1, 10), defaultValue: 1, "1", "10");
+            AddSlider(creatureSymbolScale, (string)creatureSymbolScale.info.Tags[0], "50%", "200%");
+            AddSlider(slugcatSymbolScale, (string)slugcatSymbolScale.info.Tags[0], "50%", "200%");
+            AddSlider(revealSpeedMultiplier, (string)revealSpeedMultiplier.info.Tags[0], "1", "10");
             DrawSliders(ref Tabs[tabIndex]);
 
             DrawBox(ref Tabs[tabIndex]);
         }
-        public override void Update(float dt)
+
+        public void MainModOptions_OnConfigChanged()
         {
-            base.Update(dt);
-        }
-        public override void ConfigOnChange()
-        {
-            base.ConfigOnChange();
-
-            MapMod.creatureSymbolScale = float.Parse(config["creatureSymbolScale"]) / 10f;
-            MapMod.mapScale = 10f / float.Parse(config["zoomSlider"]);
-            MapMod.slugcatSymbolScale = float.Parse(config["slugcatSymbolScale"]) / 10f;
-            MapMod.revealSpeedMultiplier = int.Parse(config["revealSpeedMultiplier"]);
-
-            MainMod.creatureSymbolsOption = bool.Parse(config["displayCreatureSymbols"]);
-            MainMod.slugcatSymbolsOption = bool.Parse(config["slugcatSymbols"]);
-
-            // it can help to have both options turned on // since one pixel check is random and the others might prevent uncover because of pipes leading into a room
-            MainMod.uncoverRegionOption = bool.Parse(config["uncoverRegion"]);
-            MainMod.uncoverRoomOption = bool.Parse(config["uncoverRoom"]);
-
-            MainMod.onlyActiveLayerOption = bool.Parse(config["showOnlyActiveLayer"]);
-            MainMod.skipFadeOption = bool.Parse(config["skipFade"]);
+            MapMod.creatureSymbolScale = creatureSymbolScale.Value / 10f;
+            MapMod.mapScale = 10f / zoomSlider.Value;
+            MapMod.slugcatSymbolScale = slugcatSymbolScale.Value / 10f;
+            MapMod.revealSpeedMultiplier = revealSpeedMultiplier.Value;
 
             Debug.Log("MapOptions: creatureSymbolScale " + MapMod.creatureSymbolScale);
             Debug.Log("MapOptions: mapScale " + MapMod.mapScale);
@@ -113,13 +127,13 @@ namespace MapOptions
             Debug.Log("MapOptions: revealSpeedMultiplier " + MapMod.revealSpeedMultiplier);
             Debug.Log("MapOptions: CanInstantReveal " + MapMod.CanInstantReveal);
 
-            Debug.Log("MapOptions: creatureSymbolsOption " + MainMod.creatureSymbolsOption);
-            Debug.Log("MapOptions: slugcatSymbolsOption " + MainMod.slugcatSymbolsOption);
-            Debug.Log("MapOptions: uncoverRegionOption " + MainMod.uncoverRegionOption);
-            Debug.Log("MapOptions: uncoverRoomOption " + MainMod.uncoverRoomOption);
+            Debug.Log("MapOptions: Option_CreatureSymbols " + MainMod.Option_CreatureSymbols);
+            Debug.Log("MapOptions: Option_SlugcatSymbols " + MainMod.Option_SlugcatSymbols);
+            Debug.Log("MapOptions: Option_UncoverRegion " + MainMod.Option_UncoverRegion);
 
-            Debug.Log("MapOptions: onlyActiveLayerOption " + MainMod.onlyActiveLayerOption);
-            Debug.Log("MapOptions: skipFadeOption " + MainMod.skipFadeOption);
+            Debug.Log("MapOptions: Option_UncoverRoom " + MainMod.Option_UncoverRoom);
+            Debug.Log("MapOptions: Option_LayerFocus " + MainMod.Option_LayerFocus);
+            Debug.Log("MapOptions: Option_SkipFade " + MainMod.Option_SkipFade);
         }
 
         // ----------------- //
@@ -157,68 +171,39 @@ namespace MapOptions
             boxEndPositions.RemoveAt(lastIndex);
         }
 
-        //private OpScrollBox AddScrollBox(ref OpTab tab, float spacingModifier = 1f)
-        //{
-        //    float boxWidth = marginX.y - marginX.x;
-        //    float marginY = spacingModifier * spacing;
-        //    boxEndPositions.Add(pos.y);
-
-        //    OpScrollBox scrollBox = new OpScrollBox(new Vector2(marginX.x, marginY), new Vector2(boxWidth, Math.Max(pos.y - marginY, spacing)), boxWidth);
-        //    tab.AddItems(scrollBox);
-
-        //    marginX -= new Vector2(30f, 70f);
-        //    AddNewLine(0.5f);
-        //    return scrollBox;
-        //}
-
-        //private void DrawScrollBox(ref OpScrollBox scrollBox)
-        //{
-        //    AddNewLine(1.5f);
-        //    int lastIndex = boxEndPositions.Count - 1;
-
-        //    scrollBox.SetContentSize(boxEndPositions[lastIndex] - pos.y);
-        //    scrollBox.ScrollToTop();
-        //    boxEndPositions.RemoveAt(lastIndex);
-        //}
-
-        private void AddCheckBox(string key, string text, string description, bool? defaultBool = null)
+        private void AddCheckBox(Configurable<bool> configurable, string text)
         {
-            OpCheckBox opCheckBox = new(new Vector2(), key, defaultBool: defaultBool ?? false)
-            {
-                description = description
-            };
-
-            checkBoxes.Add(opCheckBox);
+            checkBoxConfigurables.Add(configurable);
             checkBoxesTextLabels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
         }
 
         private void DrawCheckBoxes(ref OpTab tab) // changes pos.y but not pos.x
         {
-            if (checkBoxes.Count != checkBoxesTextLabels.Count)
-            {
-                return;
-            }
+            if (checkBoxConfigurables.Count != checkBoxesTextLabels.Count) return;
 
             float width = marginX.y - marginX.x;
             float elementWidth = (width - (numberOfCheckboxes - 1) * 0.5f * spacing) / numberOfCheckboxes;
             pos.y -= checkBoxSize;
             float _posX = pos.x;
 
-            for (int index = 0; index < checkBoxes.Count; ++index)
+            for (int checkBoxIndex = 0; checkBoxIndex < checkBoxConfigurables.Count; ++checkBoxIndex)
             {
-                OpCheckBox checkBox = checkBoxes[index];
-                checkBox.pos = new Vector2(_posX, pos.y);
+                Configurable<bool> configurable = checkBoxConfigurables[checkBoxIndex];
+                OpCheckBox checkBox = new(configurable, new Vector2(_posX, pos.y))
+                {
+                    description = configurable.info?.description ?? ""
+                };
                 tab.AddItems(checkBox);
                 _posX += CheckBoxWithSpacing;
 
-                OpLabel checkBoxLabel = checkBoxesTextLabels[index];
+                OpLabel checkBoxLabel = checkBoxesTextLabels[checkBoxIndex];
                 checkBoxLabel.pos = new Vector2(_posX, pos.y + 2f);
                 checkBoxLabel.size = new Vector2(elementWidth - CheckBoxWithSpacing, fontHeight);
                 tab.AddItems(checkBoxLabel);
 
-                if (index < checkBoxes.Count - 1)
+                if (checkBoxIndex < checkBoxConfigurables.Count - 1)
                 {
-                    if ((index + 1) % numberOfCheckboxes == 0)
+                    if ((checkBoxIndex + 1) % numberOfCheckboxes == 0)
                     {
                         AddNewLine();
                         pos.y -= checkBoxSize;
@@ -231,142 +216,30 @@ namespace MapOptions
                 }
             }
 
-            checkBoxes.Clear();
+            checkBoxConfigurables.Clear();
             checkBoxesTextLabels.Clear();
         }
 
-        //private void AddComboBox(List<ListItem> list, string key, string text, string description, string defaultName = "", bool allowEmpty = false)
-        //{
-        //    OpLabel opLabel = new OpLabel(new Vector2(), new Vector2(0.0f, fontHeight), text, FLabelAlignment.Center, false);
-        //    comboBoxesTextLabels.Add(opLabel);
-
-        //    OpComboBox opComboBox = new OpComboBox(new Vector2(), 200f, key, list, defaultName)
-        //    {
-        //        allowEmpty = allowEmpty,
-        //        description = description
-        //    };
-        //    comboBoxes.Add(opComboBox);
-        //}
-
-        //private void DrawComboBoxes(ref OpTab tab)
-        //{
-        //    if (comboBoxes.Count == 0 || comboBoxes.Count != comboBoxesTextLabels.Count)
-        //    {
-        //        return;
-        //    }
-
-        //    float offsetX = (marginX.y - marginX.x) * 0.1f;
-        //    float width = (marginX.y - marginX.x) * 0.4f;
-
-        //    for (int comboBoxIndex = 0; comboBoxIndex < comboBoxes.Count; ++comboBoxIndex)
-        //    {
-        //        AddNewLine(1.25f);
-        //        pos.x += offsetX;
-
-        //        OpLabel opLabel = comboBoxesTextLabels[comboBoxIndex];
-        //        opLabel.pos = pos;
-        //        opLabel.size += new Vector2(width, 2f); // size.y is already set
-        //        pos.x += width;
-
-        //        OpComboBox comboBox = comboBoxes[comboBoxIndex];
-        //        OpComboBox newComboBox = new OpComboBox(pos, width, comboBox.key, comboBox.GetItemList().ToList(), defaultName: comboBox.defaultValue)
-        //        {
-        //            allowEmpty = comboBox.allowEmpty,
-        //            description = comboBox.description,
-        //        };
-        //        tab.AddItems(opLabel, newComboBox);
-
-        //        if (comboBoxIndex < checkBoxes.Count - 1)
-        //        {
-        //            AddNewLine();
-        //            pos.x = marginX.x;
-        //        }
-        //    }
-
-        //    comboBoxesTextLabels.Clear();
-        //    comboBoxes.Clear();
-        //}
-
-        private void AddSlider(string key, string text, string description, IntVector2 range, int defaultValue, string? sliderTextLeft = null, string? sliderTextRight = null)
+        private void AddSlider(Configurable<int> configurable, string text, string sliderTextLeft = "", string sliderTextRight = "")
         {
-            sliderTextLeft ??= range.x.ToString();
-            sliderTextRight ??= range.y.ToString();
-
+            sliderConfigurables.Add(configurable);
             sliderMainTextLabels.Add(text);
             sliderTextLabelsLeft.Add(new OpLabel(new Vector2(), new Vector2(), sliderTextLeft, alignment: FLabelAlignment.Right)); // set pos and size when drawing
             sliderTextLabelsRight.Add(new OpLabel(new Vector2(), new Vector2(), sliderTextRight, alignment: FLabelAlignment.Left));
-
-            sliderKeys.Add(key);
-            sliderRanges.Add(range);
-            sliderDefaultValues.Add(defaultValue);
-            sliderDescriptions.Add(description);
         }
-
-        //private void DrawSliders(ref OpScrollBox scrollBox)
-        //{
-        //    if (sliderKeys.Count != sliderRanges.Count || sliderKeys.Count != sliderDefaultValues.Count || sliderKeys.Count != sliderDescriptions.Count || sliderKeys.Count != sliderMainTextLabels.Count || sliderKeys.Count != sliderTextLabelsLeft.Count || sliderKeys.Count != sliderTextLabelsRight.Count)
-        //    {
-        //        return;
-        //    }
-
-        //    float width = marginX.y - marginX.x;
-        //    float sliderCenter = marginX.x + 0.5f * width;
-        //    float sliderLabelSizeX = 0.2f * width;
-        //    float sliderSizeX = width - 2f * sliderLabelSizeX - spacing;
-
-        //    for (int sliderIndex = 0; sliderIndex < sliderKeys.Count; ++sliderIndex)
-        //    {
-        //        AddNewLine(2f);
-
-        //        OpLabel opLabel = sliderTextLabelsLeft[sliderIndex];
-        //        opLabel.pos = new Vector2(marginX.x, pos.y + 5f);
-        //        opLabel.size = new Vector2(sliderLabelSizeX, fontHeight);
-        //        scrollBox.AddItems(opLabel);
-
-        //        OpSlider slider = new OpSlider(new Vector2(sliderCenter - 0.5f * sliderSizeX, pos.y), sliderKeys[sliderIndex], sliderRanges[sliderIndex], length: (int)sliderSizeX, defaultValue: sliderDefaultValues[sliderIndex])
-        //        {
-        //            size = new Vector2(sliderSizeX, fontHeight),
-        //            description = sliderDescriptions[sliderIndex]
-        //        };
-        //        scrollBox.AddItems(slider);
-
-        //        opLabel = sliderTextLabelsRight[sliderIndex];
-        //        opLabel.pos = new Vector2(sliderCenter + 0.5f * sliderSizeX + 0.5f * spacing, pos.y + 5f);
-        //        opLabel.size = new Vector2(sliderLabelSizeX, fontHeight);
-        //        scrollBox.AddItems(opLabel);
-
-        //        AddTextLabel(sliderMainTextLabels[sliderIndex]);
-        //        DrawTextLabels(ref scrollBox);
-
-        //        if (sliderIndex < sliderKeys.Count - 1)
-        //        {
-        //            AddNewLine();
-        //        }
-        //    }
-
-        //    sliderKeys.Clear();
-        //    sliderRanges.Clear();
-        //    sliderDefaultValues.Clear();
-        //    sliderDescriptions.Clear();
-
-        //    sliderMainTextLabels.Clear();
-        //    sliderTextLabelsLeft.Clear();
-        //    sliderTextLabelsRight.Clear();
-        //}
 
         private void DrawSliders(ref OpTab tab)
         {
-            if (sliderKeys.Count != sliderRanges.Count || sliderKeys.Count != sliderDefaultValues.Count || sliderKeys.Count != sliderDescriptions.Count || sliderKeys.Count != sliderMainTextLabels.Count || sliderKeys.Count != sliderTextLabelsLeft.Count || sliderKeys.Count != sliderTextLabelsRight.Count)
-            {
-                return;
-            }
+            if (sliderConfigurables.Count != sliderMainTextLabels.Count) return;
+            if (sliderConfigurables.Count != sliderTextLabelsLeft.Count) return;
+            if (sliderConfigurables.Count != sliderTextLabelsRight.Count) return;
 
             float width = marginX.y - marginX.x;
             float sliderCenter = marginX.x + 0.5f * width;
             float sliderLabelSizeX = 0.2f * width;
             float sliderSizeX = width - 2f * sliderLabelSizeX - spacing;
 
-            for (int sliderIndex = 0; sliderIndex < sliderKeys.Count; ++sliderIndex)
+            for (int sliderIndex = 0; sliderIndex < sliderConfigurables.Count; ++sliderIndex)
             {
                 AddNewLine(2f);
 
@@ -375,10 +248,11 @@ namespace MapOptions
                 opLabel.size = new Vector2(sliderLabelSizeX, fontHeight);
                 tab.AddItems(opLabel);
 
-                OpSlider slider = new(new Vector2(sliderCenter - 0.5f * sliderSizeX, pos.y), sliderKeys[sliderIndex], sliderRanges[sliderIndex], length: (int)sliderSizeX, defaultValue: sliderDefaultValues[sliderIndex])
+                Configurable<int> configurable = sliderConfigurables[sliderIndex];
+                OpSlider slider = new(configurable, new Vector2(sliderCenter - 0.5f * sliderSizeX, pos.y), (int)sliderSizeX)
                 {
                     size = new Vector2(sliderSizeX, fontHeight),
-                    description = sliderDescriptions[sliderIndex]
+                    description = configurable.info?.description ?? ""
                 };
                 tab.AddItems(slider);
 
@@ -390,17 +264,13 @@ namespace MapOptions
                 AddTextLabel(sliderMainTextLabels[sliderIndex]);
                 DrawTextLabels(ref tab);
 
-                if (sliderIndex < sliderKeys.Count - 1)
+                if (sliderIndex < sliderConfigurables.Count - 1)
                 {
                     AddNewLine();
                 }
             }
 
-            sliderKeys.Clear();
-            sliderRanges.Clear();
-            sliderDefaultValues.Clear();
-            sliderDescriptions.Clear();
-
+            sliderConfigurables.Clear();
             sliderMainTextLabels.Clear();
             sliderTextLabelsLeft.Clear();
             sliderTextLabelsRight.Clear();

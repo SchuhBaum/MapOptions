@@ -1,23 +1,21 @@
 ## MapOptions
-###### Version: 0.59
+###### Version: 2.0.1
 
 ### Description
-This mod adds options to configure the map.  
-- Creature Symbols: These symbols display what creature types are present in each room.
-- Layer Focus: Only the active layer is displayed on the map.
-- Skip Fade In/Out: Pressing the map button shows the map with no delay.
-- Slugcat Symbols: Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op Mod is enabled, draws a sprite for each player.
-- Uncover Region: Once loaded into the game the whole region map gets uncovered.
-- Uncover Room: When the player enters a room the whole room gets uncovered instead of just the area around slugcat.
-- Reveal Speed Multiplier: For a given value X the map is revealed X-times as fast. If the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.
+Adds options to configure the map:  
+- `(Creature Symbols)` These symbols display what creature types are present in each room.
+- `(Layer Focus)` Only the active layer is displayed on the map.
+- `(Skip Fade In/Out)` Pressing the map button shows the map with no delay.
+- `(Slugcat Symbols)` Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op Mod is enabled, draws a sprite for each player.
+- `(Uncover Region)` Once loaded into the game the whole region map gets uncovered.
+- `(Uncover Room)` When the player enters a room the whole room gets uncovered instead of just the area around slugcat.
+- `(Reveal Speed Multiplier)` For a given value X the map is revealed X-times as fast. If the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.
 
 ### Installation
-1. (ModLoader) `BepInEx` and `BOI` can be downloaded from [RainDB](https://www.raindb.net/) under `Tools`.  
-  **NOTE:** Rain World's BepInEx is a modified version. Don't download it from GitHub.  
-2. (Dependency) The mod `ConfigMachine` can be downloaded from [RainDB](https://www.raindb.net/) under `Tools`.
-3. Download the file  `MapOptions.dll` from [Releases](https://github.com/SchuhBaum/MapOptions/releases) and place it in the folder `[Steam]\SteamApps\common\Rain World\Mods`.  
-4. Start `[Steam]\SteamApps\common\Rain World\BOI\BlepOutIn.exe`.  
-5. Click `Select path` and enter the game's path `[Steam]\SteamApps\common\Rain World`. Enable the mod `MapOptions.dll` and its dependencies. Then launch the game as normal. 
+0. Update Rain World to version 1.9 if needed.
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases).
+2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
+3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
 ### Contact
 If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write an email to SchuhBaum71@gmail.com.  
@@ -26,6 +24,12 @@ If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write a
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use.
 
 ### Changelog
+#### (Rain World v1.9)
+v2.0.1:
+- Added support for Rain World 1.9.
+- Removed AutoUpdate.
+
+#### (Rain World v1.5)
 v0.20:
 - Added the option to skip the fade in/out animation when opening/closing the map.
 

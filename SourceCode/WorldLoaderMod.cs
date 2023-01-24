@@ -16,21 +16,19 @@ namespace MapOptions
         // private functions //
         // ----------------- //
 
-        private static void WorldLoader_NextActivity(On.WorldLoader.orig_NextActivity orig, object obj)
+        private static void WorldLoader_NextActivity(On.WorldLoader.orig_NextActivity orig, WorldLoader worldLoader)
         {
-            orig(obj);
-            WorldLoader worldLoader = (WorldLoader)obj;
+            orig(worldLoader);
 
-            if (worldLoader.Finished && worldLoader.game?.IsStorySession == true)
+            if (!worldLoader.Finished) return;
+            if (worldLoader.game?.IsStorySession == false) return;
+
+            foreach (AbstractRoom abstractRoom in worldLoader.world.abstractRooms)
             {
-                foreach (AbstractRoom abstractRoom in worldLoader.world.abstractRooms)
+                if (!MapMod.uncoveredRooms.Contains(abstractRoom))
                 {
-                    if (!MapMod.uncoveredRooms.Contains(abstractRoom))
-                    {
-                        MapMod.uncoveredRooms.Add(abstractRoom);
-                    }
+                    MapMod.uncoveredRooms.Add(abstractRoom);
                 }
-
             }
         }
     }

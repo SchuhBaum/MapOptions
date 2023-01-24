@@ -82,7 +82,7 @@ namespace MapOptions
 
         private static float HUD_Map_Alpha(On.HUD.Map.orig_Alpha orig, HUD.Map map, int layer, float timeStacker, bool compensateForLayersInFront)
         {
-            if (!MainMod.onlyActiveLayerOption)
+            if (!MainMod.Option_LayerFocus)
             {
                 return orig(map, layer, timeStacker, compensateForLayersInFront);
             }
@@ -129,7 +129,7 @@ namespace MapOptions
             if (map.hud.rainWorld.processManager.currentMainLoop is RainWorldGame game && game.IsStorySession)
             {
                 // add creature and slugcat symbols of creatures that were already created
-                if (MainMod.creatureSymbolsOption)
+                if (MainMod.Option_CreatureSymbols)
                 {
                     foreach (AbstractRoom abstractRoom in game.world.abstractRooms)
                     {
@@ -151,17 +151,21 @@ namespace MapOptions
                             }
                         }
                     }
-                }
 
-                if (MainMod.slugcatSymbolsOption)
-                {
                     foreach (AbstractCreature abstractPlayer in game.Players)
                     {
-                        attachedFields.slugcatSymbols.Add(new CreatureSymbolOnMap(abstractPlayer, map.inFrontContainer));
                         if (abstractPlayer.realizedCreature is Player player)
                         {
                             PlayerMod.RemoveObjectInStomachSymbol(player);
                         }
+                    }
+                }
+
+                if (MainMod.Option_SlugcatSymbols)
+                {
+                    foreach (AbstractCreature abstractPlayer in game.Players)
+                    {
+                        attachedFields.slugcatSymbols.Add(new CreatureSymbolOnMap(abstractPlayer, map.inFrontContainer));
                     }
                 }
             }
@@ -176,7 +180,7 @@ namespace MapOptions
                 return;
             }
 
-            if (MainMod.onlyActiveLayerOption && map.visible)
+            if (MainMod.Option_LayerFocus && map.visible)
             {
                 map.depth = map.layer;
                 map.lastDepth = map.depth;
@@ -220,7 +224,7 @@ namespace MapOptions
             if (map.visible)
             {
                 attachedFields.hasMapClosed = false;
-                if (MainMod.creatureSymbolsOption)
+                if (MainMod.Option_CreatureSymbols)
                 {
                     Dictionary<AbstractRoom, List<CreatureSymbolOnMap>> creatureSymbolPerRoomList = new();
                     Dictionary<AbstractRoom, List<CreatureTemplate.Type>> creatureTypePerRoomList = new();
@@ -284,7 +288,7 @@ namespace MapOptions
                     }
                 }
 
-                if (MainMod.slugcatSymbolsOption)
+                if (MainMod.Option_SlugcatSymbols)
                 {
                     foreach (CreatureSymbolOnMap slugcatSymbol in attachedFields.slugcatSymbols)
                     {
@@ -339,7 +343,7 @@ namespace MapOptions
                 uncoveredRooms.RemoveAt(0);
             }
 
-            if (MainMod.skipFadeOption && map.mapLoaded && map.discLoaded)
+            if (MainMod.Option_SkipFade && map.mapLoaded && map.discLoaded)
             {
                 if (map.hud.owner.RevealMap)
                 {
@@ -372,7 +376,7 @@ namespace MapOptions
                     Shader.SetGlobalVector("_mapSize", map.mapSize / mapScale);
                 }
 
-                if (MainMod.slugcatSymbolsOption)
+                if (MainMod.Option_SlugcatSymbols)
                 {
                     map.playerMarker?.ClearSprite();
                     map.playerMarker = null;
