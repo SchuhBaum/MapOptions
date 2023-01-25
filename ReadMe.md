@@ -1,5 +1,6 @@
 ## MapOptions
 ###### Version: 2.0.1
+This is a mod for Rain World v1.9.
 
 ### Description
 Adds options to configure the map:  
