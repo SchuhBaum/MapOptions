@@ -27,7 +27,7 @@ namespace MapOptions
 
             if (MainMod.Option_UncoverRegion)
             {
-                WorldLoaderMod.OnEnable();
+                OverWorldMod.OnEnable();
             }
 
             if (MainMod.Option_UncoverRoom)
@@ -51,7 +51,7 @@ namespace MapOptions
 
             if (MainMod.Option_UncoverRegion)
             {
-                WorldLoaderMod.OnDisable();
+                OverWorldMod.OnDisable();
             }
 
             if (MainMod.Option_UncoverRoom)
