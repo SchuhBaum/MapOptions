@@ -123,7 +123,7 @@ namespace MapOptions
         private static void HUD_Map_ctor(On.HUD.Map.orig_ctor orig, HUD.Map map, HUD.HUD hud, HUD.Map.MapData mapData)
         {
             orig(map, hud, mapData);
-            if (map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player) return;
+            if (map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player && map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.SleepScreen) return;
 
             AttachedFields attachedFields = new();
             if (map.hud.rainWorld.processManager.currentMainLoop is RainWorldGame game && game.IsStorySession)

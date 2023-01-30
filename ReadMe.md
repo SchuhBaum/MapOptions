@@ -1,9 +1,10 @@
 ## MapOptions
-###### Version: 2.0.2
+###### Version: 2.0.3
 This is a mod for Rain World v1.9.
 
 ### Description
 Adds options to configure the map:  
+- `(Map Zoom)` The zoom can be adjusted (50%-150%).
 - `(Creature Symbols)` These symbols display what creature types are present in each room.
 - `(Layer Focus)` Only the active layer is displayed on the map.
 - `(Skip Fade In/Out)` Pressing the map button shows the map with no delay.
@@ -26,10 +27,11 @@ There are two licenses available - MIT and Unlicense. You can choose which one y
 
 ### Changelog
 #### (Rain World v1.9)
-v2.0.2:
+v2.0.3:
 - Added support for Rain World 1.9.
 - Removed AutoUpdate.
 - (uncover region) Should work again.
+- Activated map for sleep screen again. There were some visual issues in the past (mostly for the fast travel screen). I hadn't any so far.
 
 #### (Rain World v1.5)
 v0.20:
