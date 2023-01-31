@@ -123,7 +123,9 @@ namespace MapOptions
         private static void HUD_Map_ctor(On.HUD.Map.orig_ctor orig, HUD.Map map, HUD.HUD hud, HUD.Map.MapData mapData)
         {
             orig(map, hud, mapData);
-            if (map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player && map.hud.owner.GetOwnerType() != HUD.HUD.OwnerType.SleepScreen) return;
+
+            HUD.HUD.OwnerType ownerType = map.hud.owner.GetOwnerType();
+            if (ownerType != HUD.HUD.OwnerType.Player && ownerType != HUD.HUD.OwnerType.SleepScreen && ownerType != HUD.HUD.OwnerType.DeathScreen) return;
 
             AttachedFields attachedFields = new();
             if (map.hud.rainWorld.processManager.currentMainLoop is RainWorldGame game && game.IsStorySession)
@@ -281,7 +283,7 @@ namespace MapOptions
                             }
                             else
                             {
-                                creatureSymbol.Draw(map, timeStacker, inRoomPos);
+                                creatureSymbol.Draw(map, timeStacker, inRoomPos - new Vector2(10f, 10f));
                                 creatureSymbol.IsVisible = true;
                             }
                         }
@@ -302,7 +304,7 @@ namespace MapOptions
                             }
                             else
                             {
-                                slugcatSymbol.Draw(map, timeStacker, player.mainBodyChunk.pos - new Vector2(20f, 0.0f));
+                                slugcatSymbol.Draw(map, timeStacker, player.mainBodyChunk.pos - new Vector2(10f, 10f));
                                 slugcatSymbol.IsVisible = true;
                             }
                         }

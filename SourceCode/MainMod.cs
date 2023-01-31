@@ -7,7 +7,7 @@ using UnityEngine;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace MapOptions
 {
-    [BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.3")]
+    [BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.4")]
     public class MainMod : BaseUnityPlugin
     {
         //
@@ -16,7 +16,7 @@ namespace MapOptions
 
         public static readonly string MOD_ID = "MapOptions";
         public static readonly string author = "SchuhBaum";
-        public static readonly string version = "2.0.3";
+        public static readonly string version = "2.0.4";
 
         //
         // options

@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.0.3
+###### Version: 2.0.4
 This is a mod for Rain World v1.9.
 
 ### Description
@@ -27,11 +27,12 @@ There are two licenses available - MIT and Unlicense. You can choose which one y
 
 ### Changelog
 #### (Rain World v1.9)
-v2.0.3:
+v2.0.4:
 - Added support for Rain World 1.9.
 - Removed AutoUpdate.
 - (uncover region) Should work again.
 - Activated map for sleep screen again. There were some visual issues in the past (mostly for the fast travel screen). I hadn't any so far.
+- Activated map for death screen again.
 
 #### (Rain World v1.5)
 v0.20:
