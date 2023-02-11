@@ -7,7 +7,7 @@ using UnityEngine;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace MapOptions
 {
-    [BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.4")]
+    [BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.5")]
     public class MainMod : BaseUnityPlugin
     {
         //
@@ -16,11 +16,13 @@ namespace MapOptions
 
         public static readonly string MOD_ID = "MapOptions";
         public static readonly string author = "SchuhBaum";
-        public static readonly string version = "2.0.4";
+        public static readonly string version = "2.0.5";
 
         //
         // options
         //
+
+        public static bool Option_AerialMap => MainModOptions.aerialMap.Value;
 
         public static bool Option_CreatureSymbols => MainModOptions.creatureSymbols.Value;
         public static bool Option_SlugcatSymbols => MainModOptions.slugcatSymbols.Value;
@@ -55,16 +57,7 @@ namespace MapOptions
             if (isInitialized) return;
             isInitialized = true;
 
-            Debug.Log("MapOptions: Version " + Info.Metadata.Version);
-            if (!ModManager.JollyCoop)
-            {
-                Debug.Log("MapOptions: JollyCoop not found.");
-            }
-            else
-            {
-                Debug.Log("MapOptions: JollyCoop found. Use custom colors for slugcat symbols.");
-            }
-
+            Debug.Log("MapOptions: version " + version);
             MapMod.OnEnable();
             RainWorldGameMod.OnEnable();
         }

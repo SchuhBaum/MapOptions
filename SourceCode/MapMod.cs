@@ -124,6 +124,13 @@ namespace MapOptions
         {
             orig(map, hud, mapData);
 
+            // no arial maps
+            if (!MainMod.Option_AerialMap)
+            {
+                map.STANDARDELEMENTLIST[1] = false;
+                map.STANDARDELEMENTLIST[2] = false;
+            }
+
             HUD.HUD.OwnerType ownerType = map.hud.owner.GetOwnerType();
             if (ownerType != HUD.HUD.OwnerType.Player && ownerType != HUD.HUD.OwnerType.SleepScreen && ownerType != HUD.HUD.OwnerType.DeathScreen) return;
 

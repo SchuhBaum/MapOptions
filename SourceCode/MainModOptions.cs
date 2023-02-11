@@ -12,6 +12,7 @@ namespace MapOptions
         // options
         //
 
+        public static Configurable<bool> aerialMap = instance.config.Bind("aerialMap", defaultValue: true, new ConfigurableInfo("When disabled, the default map shader is used in Chimney Canopy and Sky Islands.", null, "", "Aerial Map"));
         public static Configurable<bool> creatureSymbols = instance.config.Bind("creatureSymbols", defaultValue: true, new ConfigurableInfo("Creature symbols are added to the map. These symbols display what creature types are present in each room.", null, "", "Creature Symbols"));
         public static Configurable<bool> layerFocus = instance.config.Bind("layerFocus", defaultValue: false, new ConfigurableInfo("Only the active layer is displayed on the map.", null, "", "Layer Focus"));
         public static Configurable<bool> skipFade = instance.config.Bind("skipFade", defaultValue: false, new ConfigurableInfo("Pressing the map button shows the map with no delay.", null, "", "Skip Fade In/Out"));
@@ -95,6 +96,7 @@ namespace MapOptions
 
             AddNewLine();
 
+            AddCheckBox(aerialMap, (string)aerialMap.info.Tags[0]);
             AddCheckBox(creatureSymbols, (string)creatureSymbols.info.Tags[0]);
             AddCheckBox(layerFocus, (string)layerFocus.info.Tags[0]);
             AddCheckBox(skipFade, (string)skipFade.info.Tags[0]);
