@@ -5,6 +5,7 @@ This is a mod for Rain World v1.9.
 ### Description
 Adds options to configure the map:  
 - `(Map Zoom)` The zoom can be adjusted (50%-150%).
+- `(Aerial Map)` When disabled, the default map shader is used in Chimney Canopy and Sky Islands.
 - `(Creature Symbols)` These symbols display what creature types are present in each room.
 - `(Layer Focus)` Only the active layer is displayed on the map.
 - `(Skip Fade In/Out)` Pressing the map button shows the map with no delay.
