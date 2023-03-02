@@ -1,15 +1,33 @@
+using static MapOptions.MainMod;
+
 namespace MapOptions;
 
 internal static class AbstractRoomMod
 {
-    internal static void OnEnable()
-    {
-        On.AbstractRoom.AddEntity += AbstractRoom_AddEntity;
-    }
+    //
+    // variables
+    //
 
-    internal static void OnDisable()
+    private static bool is_enabled = false;
+
+    //
+    //
+    //
+
+    internal static void On_Toggle()
     {
-        On.AbstractRoom.AddEntity -= AbstractRoom_AddEntity;
+        is_enabled = !is_enabled;
+        if (Option_UncoverRoom)
+        {
+            if (is_enabled)
+            {
+                On.AbstractRoom.AddEntity += AbstractRoom_AddEntity;
+            }
+            else
+            {
+                On.AbstractRoom.AddEntity -= AbstractRoom_AddEntity;
+            }
+        }
     }
 
     //
@@ -19,11 +37,10 @@ internal static class AbstractRoomMod
     private static void AbstractRoom_AddEntity(On.AbstractRoom.orig_AddEntity orig, AbstractRoom abstractRoom, AbstractWorldEntity abstractWorldEntity)
     {
         orig(abstractRoom, abstractWorldEntity);
-        if (abstractWorldEntity is not AbstractCreature abstractCreature) return;
 
-        if (abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Slugcat && !MapMod.uncoveredRooms.Contains(abstractRoom))
-        {
-            MapMod.uncoveredRooms.Add(abstractRoom);
-        }
+        if (abstractWorldEntity is not AbstractCreature abstractCreature) return;
+        if (abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Slugcat) return;
+        if (MapMod.uncoveredRooms.Contains(abstractRoom)) return;
+        MapMod.uncoveredRooms.Add(abstractRoom);
     }
 }

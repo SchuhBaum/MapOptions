@@ -1,15 +1,35 @@
+using static MapOptions.MainMod;
+
 namespace MapOptions;
 
 internal static class RegionGateMod
 {
-    internal static void OnDisable()
-    {
-        On.RegionGate.Update -= RegionGate_Update;
-    }
+    //
+    // variables
+    //
 
-    internal static void OnEnable()
+    private static bool is_enabled = false;
+
+    //
+    //
+    //
+
+    internal static void On_Toggle()
     {
-        On.RegionGate.Update += RegionGate_Update;
+        is_enabled = !is_enabled;
+        if (Option_UncoverRoom)
+        {
+            if (is_enabled)
+            {
+                // the room stays the same 
+                // wait a bit and add the room again to be uncovered in the new region as well
+                On.RegionGate.Update += RegionGate_Update;
+            }
+            else
+            {
+                On.RegionGate.Update -= RegionGate_Update;
+            }
+        }
     }
 
     //

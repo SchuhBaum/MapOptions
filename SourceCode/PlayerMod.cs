@@ -1,20 +1,38 @@
 using System.Collections.Generic;
 
+using static MapOptions.MainMod;
+
 namespace MapOptions;
 
 public static class PlayerMod
 {
-    internal static void OnEnable()
-    {
-        //On.Player.ctor += Player_ctor; // add or update slugcat symbol // maps not initialized yet => does nothing
-        On.Player.Regurgitate += Player_Regurgitate; // add creature symbol if needed
-        On.Player.SwallowObject += Player_SwallowObject; // remove creature symbol if needed
-    }
+    //
+    // variables
+    //
 
-    internal static void OnDisable()
+    private static bool is_enabled = false;
+
+    //
+    //
+    //
+
+    internal static void On_Toggle()
     {
-        On.Player.Regurgitate -= Player_Regurgitate;
-        On.Player.SwallowObject -= Player_SwallowObject;
+        is_enabled = !is_enabled;
+        if (Option_CreatureSymbols)
+        {
+            if (is_enabled)
+            {
+                //On.Player.ctor += Player_ctor; // add or update slugcat symbol // maps not initialized yet => does nothing
+                On.Player.Regurgitate += Player_Regurgitate; // add creature symbol if needed
+                On.Player.SwallowObject += Player_SwallowObject; // remove creature symbol if needed
+            }
+            else
+            {
+                On.Player.Regurgitate -= Player_Regurgitate;
+                On.Player.SwallowObject -= Player_SwallowObject;
+            }
+        }
     }
 
     //

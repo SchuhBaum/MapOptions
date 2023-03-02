@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using static MapOptions.MainMod;
+
 namespace MapOptions;
 
 public static class AbstractCreatureMod
@@ -11,17 +13,31 @@ public static class AbstractCreatureMod
     public static readonly List<CreatureTemplate.Type> creatureTypeBlacklist = new() { CreatureTemplate.Type.StandardGroundCreature, CreatureTemplate.Type.Fly, CreatureTemplate.Type.Slugcat };
 
     //
+    // variables
+    //
+
+    private static bool is_enabled = false;
+
+    //
     //
     //
 
-    internal static void OnEnable()
+    internal static void On_Toggle()
     {
-        On.AbstractCreature.ctor += AbstractCreature_ctor; // adds creature symbols // map might not be initialized yet => add when maps get initialized
-    }
-
-    internal static void OnDisable()
-    {
-        On.AbstractCreature.ctor -= AbstractCreature_ctor;
+        is_enabled = !is_enabled;
+        if (Option_CreatureSymbols)
+        {
+            if (is_enabled)
+            {
+                // adds creature symbols 
+                // map might not be initialized yet => add when maps get initialized
+                On.AbstractCreature.ctor += AbstractCreature_ctor;
+            }
+            else
+            {
+                On.AbstractCreature.ctor -= AbstractCreature_ctor;
+            }
+        }
     }
 
     //

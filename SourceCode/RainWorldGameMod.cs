@@ -17,24 +17,13 @@ internal static class RainWorldGameMod
     private static void RainWorldGame_ctor(On.RainWorldGame.orig_ctor orig, RainWorldGame game, ProcessManager manager)
     {
         Debug.Log("MapOptions: Add option specific hooks.");
-        MainModOptions.instance.MainModOptions_OnConfigChanged();
 
-        if (MainMod.Option_CreatureSymbols)
-        {
-            AbstractCreatureMod.OnEnable();
-            PlayerMod.OnEnable();
-        }
+        AbstractCreatureMod.On_Toggle();
+        AbstractRoomMod.On_Toggle();
+        OverWorldMod.On_Toggle();
+        PlayerMod.On_Toggle();
+        RegionGateMod.On_Toggle();
 
-        if (MainMod.Option_UncoverRegion)
-        {
-            OverWorldMod.OnEnable();
-        }
-
-        if (MainMod.Option_UncoverRoom)
-        {
-            AbstractRoomMod.OnEnable(); // when slugcat is added to an abstract room
-            RegionGateMod.OnEnable(); // the room stays the same // wait a bit and add the room again to be uncovered in the new region as well
-        }
         orig(game, manager);
     }
 
@@ -43,21 +32,10 @@ internal static class RainWorldGameMod
         Debug.Log("MapOptions: Remove option specific hooks.");
         orig(game);
 
-        if (MainMod.Option_CreatureSymbols)
-        {
-            AbstractCreatureMod.OnDisable();
-            PlayerMod.OnDisable();
-        }
-
-        if (MainMod.Option_UncoverRegion)
-        {
-            OverWorldMod.OnDisable();
-        }
-
-        if (MainMod.Option_UncoverRoom)
-        {
-            AbstractRoomMod.OnDisable();
-            RegionGateMod.OnDisable();
-        }
+        AbstractCreatureMod.On_Toggle();
+        AbstractRoomMod.On_Toggle();
+        OverWorldMod.On_Toggle();
+        PlayerMod.On_Toggle();
+        RegionGateMod.On_Toggle();
     }
 }

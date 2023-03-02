@@ -31,6 +31,10 @@ public static class MapMod
 
     public static List<AbstractRoom> uncoveredRooms = new();
 
+    //
+    //
+    //
+
     internal static void OnEnable()
     {
         On.HUD.Map.Alpha += HUD_Map_Alpha;

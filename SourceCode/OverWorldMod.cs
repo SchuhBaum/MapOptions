@@ -1,17 +1,35 @@
+using static MapOptions.MainMod;
+
 namespace MapOptions;
 
 internal static class OverWorldMod
 {
-    internal static void OnDisable()
-    {
-        On.OverWorld.LoadWorld -= OverWorld_LoadWorld;
-        On.OverWorld.WorldLoaded -= OverWorld_WorldLoaded;
-    }
+    //
+    // variables
+    //
 
-    internal static void OnEnable() // Option_UncoverRegion
+    private static bool is_enabled = false;
+
+    //
+    //
+    //
+
+    internal static void On_Toggle()
     {
-        On.OverWorld.LoadWorld += OverWorld_LoadWorld; // load first region
-        On.OverWorld.WorldLoaded += OverWorld_WorldLoaded; // change regions
+        is_enabled = !is_enabled;
+        if (Option_UncoverRegion)
+        {
+            if (is_enabled)
+            {
+                On.OverWorld.LoadWorld += OverWorld_LoadWorld; // load first region
+                On.OverWorld.WorldLoaded += OverWorld_WorldLoaded; // change regions
+            }
+            else
+            {
+                On.OverWorld.LoadWorld -= OverWorld_LoadWorld;
+                On.OverWorld.WorldLoaded -= OverWorld_WorldLoaded;
+            }
+        }
     }
 
     //
