@@ -18,6 +18,7 @@ public static class MapMod
     public static float creature_symbols_scale = 1f;
     public static float map_scale = 1f;
     public static float slugcat_symbols_scale = 1f;
+
     public static int reveal_speed_multiplier = 1;
 
     public static bool Is_Scaling_Enabled => !(map_scale == 1f);
@@ -297,7 +298,7 @@ public static class MapMod
         }
     }
 
-    private static void Skip_Fade(Map map)
+    public static void Skip_Fade(Map map)
     {
         if (!Option_SkipFade) return;
         if (!map.mapLoaded) return;
