@@ -40,9 +40,9 @@ internal static class OverWorldMod
     {
         foreach (AbstractRoom abstractRoom in world.abstractRooms)
         {
-            if (!MapMod.uncoveredRooms.Contains(abstractRoom))
+            if (!MapMod.uncovered_rooms.Contains(abstractRoom))
             {
-                MapMod.uncoveredRooms.Add(abstractRoom);
+                MapMod.uncovered_rooms.Add(abstractRoom);
             }
         }
     }

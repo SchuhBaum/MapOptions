@@ -64,14 +64,14 @@ public class Creature_Symbol_On_Map
     {
         if (Symbol_Sprite != null) return;
 
-        creature_symbol.showFlash = 0.0f;
-        creature_symbol.lastShowFlash = 0.0f;
-
         // creates symbolSprite and adds it to the container;
         creature_symbol.Show(false);
 
         if (Symbol_Sprite == null) return;
-        Symbol_Sprite.scale = creature_symbol.critType == CreatureTemplate.Type.Slugcat ? slugcatSymbolScale : creatureSymbolScale;
+
+        creature_symbol.showFlash = 0.0f;
+        creature_symbol.lastShowFlash = 0.0f;
+        Symbol_Sprite.scale = creature_symbol.critType == CreatureTemplate.Type.Slugcat ? slugcat_symbols_scale : creature_symbols_scale;
 
         // otherwise they are show in the bottom left corner
         Symbol_Sprite.isVisible = false;
@@ -81,9 +81,9 @@ public class Creature_Symbol_On_Map
     {
         if (Symbol_Sprite == null) return;
 
-        creature_symbol.Draw(time_stacker, map.RoomToMapPos(in_room_position, Abstract_Room.index, time_stacker));
         creature_symbol.myColor = Abstract_Room.layer == map.layer ? default_color : new Color(1f, 1f, 1f);
         Symbol_Sprite.alpha = map.Alpha(Abstract_Room.layer, time_stacker, false);
+        creature_symbol.Draw(time_stacker, map.RoomToMapPos(in_room_position, Abstract_Room.index, time_stacker));
     }
 
     public void Remove_Sprites() => creature_symbol.RemoveSprites();

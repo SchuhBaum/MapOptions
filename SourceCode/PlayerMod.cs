@@ -43,14 +43,14 @@ public static class PlayerMod
     {
         if (player.objectInStomach is AbstractCreature abstractCreature)
         {
-            foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
+            foreach (MapMod.AttachedFields attachedFields in MapMod.all_attached_fields.Values)
             {
-                foreach (Creature_Symbol_On_Map creatureSymbol in attachedFields.creatureSymbols)
+                foreach (Creature_Symbol_On_Map creature_symbol in attachedFields.creature_symbols)
                 {
-                    if (creatureSymbol.abstract_creature == abstractCreature)
+                    if (creature_symbol.abstract_creature == abstractCreature)
                     {
-                        creatureSymbol.Remove_Sprites();
-                        attachedFields.creatureSymbols.Remove(creatureSymbol);
+                        creature_symbol.Remove_Sprites();
+                        attachedFields.creature_symbols.Remove(creature_symbol);
                         break;
                     }
                 }
@@ -66,9 +66,9 @@ public static class PlayerMod
     {
         if (player.objectInStomach is AbstractCreature abstractCreature && !AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
         {
-            foreach (KeyValuePair<HUD.Map, MapMod.AttachedFields> map_attachedFields in MapMod.allAttachedFields)
+            foreach (KeyValuePair<HUD.Map, MapMod.AttachedFields> map_attachedFields in MapMod.all_attached_fields)
             {
-                map_attachedFields.Value.creatureSymbols.Add(new Creature_Symbol_On_Map(abstractCreature, map_attachedFields.Key.inFrontContainer));
+                map_attachedFields.Value.creature_symbols.Add(new Creature_Symbol_On_Map(abstractCreature, map_attachedFields.Key.inFrontContainer));
             }
         }
         orig(player);

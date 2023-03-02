@@ -113,17 +113,17 @@ public class MainModOptions : OptionInterface
 
     public void MainModOptions_OnConfigChanged()
     {
-        MapMod.creatureSymbolScale = creatureSymbolScale.Value / 10f;
-        MapMod.mapScale = 10f / zoomSlider.Value;
-        MapMod.slugcatSymbolScale = slugcatSymbolScale.Value / 10f;
-        MapMod.revealSpeedMultiplier = revealSpeedMultiplier.Value;
+        MapMod.creature_symbols_scale = creatureSymbolScale.Value / 10f;
+        MapMod.map_scale = 10f / zoomSlider.Value;
+        MapMod.slugcat_symbols_scale = slugcatSymbolScale.Value / 10f;
+        MapMod.reveal_speed_multiplier = revealSpeedMultiplier.Value;
 
-        Debug.Log("MapOptions: creatureSymbolScale " + MapMod.creatureSymbolScale);
-        Debug.Log("MapOptions: mapScale " + MapMod.mapScale);
-        Debug.Log("MapOptions: slugcatSymbolScale " + MapMod.slugcatSymbolScale);
+        Debug.Log("MapOptions: creatureSymbolScale " + MapMod.creature_symbols_scale);
+        Debug.Log("MapOptions: mapScale " + MapMod.map_scale);
+        Debug.Log("MapOptions: slugcatSymbolScale " + MapMod.slugcat_symbols_scale);
 
-        Debug.Log("MapOptions: revealSpeedMultiplier " + MapMod.revealSpeedMultiplier);
-        Debug.Log("MapOptions: CanInstantReveal " + MapMod.CanInstantReveal);
+        Debug.Log("MapOptions: revealSpeedMultiplier " + MapMod.reveal_speed_multiplier);
+        Debug.Log("MapOptions: CanInstantReveal " + MapMod.Can_Instant_Reveal);
 
         Debug.Log("MapOptions: Option_CreatureSymbols " + MainMod.Option_CreatureSymbols);
         Debug.Log("MapOptions: Option_SlugcatSymbols " + MainMod.Option_SlugcatSymbols);

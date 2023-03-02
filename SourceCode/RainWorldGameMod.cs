@@ -29,6 +29,8 @@ internal static class RainWorldGameMod
 
     private static void RainWorldGame_ShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame game)
     {
+        // I probably don't want to clear variables here since
+        // the death and sleep screens have maps as well; 
         Debug.Log("MapOptions: Remove option specific hooks.");
         orig(game);
 

@@ -40,7 +40,7 @@ internal static class AbstractRoomMod
 
         if (abstractWorldEntity is not AbstractCreature abstractCreature) return;
         if (abstractCreature.creatureTemplate.type != CreatureTemplate.Type.Slugcat) return;
-        if (MapMod.uncoveredRooms.Contains(abstractRoom)) return;
-        MapMod.uncoveredRooms.Add(abstractRoom);
+        if (MapMod.uncovered_rooms.Contains(abstractRoom)) return;
+        MapMod.uncovered_rooms.Add(abstractRoom);
     }
 }

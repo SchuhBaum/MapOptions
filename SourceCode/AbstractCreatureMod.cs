@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using HUD;
 
 using static MapOptions.MainMod;
+using static MapOptions.MapMod;
 
 namespace MapOptions;
 
@@ -49,9 +51,9 @@ public static class AbstractCreatureMod
         orig(abstractCreature, world, creatureTemplate, realizedCreature, pos, ID);
         if (!creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
         {
-            foreach (KeyValuePair<HUD.Map, MapMod.AttachedFields> map_attachedFields in MapMod.allAttachedFields)
+            foreach (KeyValuePair<Map, AttachedFields> map_attachedFields in MapMod.all_attached_fields)
             {
-                map_attachedFields.Value.creatureSymbols.Add(new Creature_Symbol_On_Map(abstractCreature, map_attachedFields.Key.inFrontContainer));
+                map_attachedFields.Value.creature_symbols.Add(new Creature_Symbol_On_Map(abstractCreature, map_attachedFields.Key.inFrontContainer));
             }
         }
     }
