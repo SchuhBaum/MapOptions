@@ -27,11 +27,11 @@ namespace MapOptions
             {
                 foreach (MapMod.AttachedFields attachedFields in MapMod.allAttachedFields.Values)
                 {
-                    foreach (CreatureSymbolOnMap creatureSymbol in attachedFields.creatureSymbols)
+                    foreach (Creature_Symbol_On_Map creatureSymbol in attachedFields.creatureSymbols)
                     {
-                        if (creatureSymbol.abstractCreature == abstractCreature)
+                        if (creatureSymbol.abstract_creature == abstractCreature)
                         {
-                            creatureSymbol.RemoveSprites();
+                            creatureSymbol.Remove_Sprites();
                             attachedFields.creatureSymbols.Remove(creatureSymbol);
                             break;
                         }
@@ -50,7 +50,7 @@ namespace MapOptions
             {
                 foreach (KeyValuePair<HUD.Map, MapMod.AttachedFields> map_attachedFields in MapMod.allAttachedFields)
                 {
-                    map_attachedFields.Value.creatureSymbols.Add(new CreatureSymbolOnMap(abstractCreature, map_attachedFields.Key.inFrontContainer));
+                    map_attachedFields.Value.creatureSymbols.Add(new Creature_Symbol_On_Map(abstractCreature, map_attachedFields.Key.inFrontContainer));
                 }
             }
             orig(player);

@@ -27,7 +27,7 @@ namespace MapOptions
             {
                 foreach (KeyValuePair<HUD.Map, MapMod.AttachedFields> map_attachedFields in MapMod.allAttachedFields)
                 {
-                    map_attachedFields.Value.creatureSymbols.Add(new CreatureSymbolOnMap(abstractCreature, map_attachedFields.Key.inFrontContainer));
+                    map_attachedFields.Value.creatureSymbols.Add(new Creature_Symbol_On_Map(abstractCreature, map_attachedFields.Key.inFrontContainer));
                 }
             }
         }
