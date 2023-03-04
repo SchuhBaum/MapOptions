@@ -114,6 +114,9 @@ public static class MapMod
         // draw
         foreach (AbstractRoom abstract_room in creature_symbols_sorted_by_room.Keys)
         {
+            // in GW when using spearmaster there are rooms that are disabled but creature still spawn;
+            if (abstract_room.world.DisabledMapRooms.Contains(abstract_room.name)) continue;
+
             List<Creature_Symbol_On_Map> creature_symbols_in_room = creature_symbols_sorted_by_room[abstract_room];
             float room_width_per_creature = map.mapData.SizeOfRoom(abstract_room.index).x / (creature_symbols_in_room.Count + 1f);
 

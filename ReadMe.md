@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.0.5
+###### Version: 2.0.6
 This is a mod for Rain World v1.9.
 
 ### Description
@@ -16,7 +16,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.0.5).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.0.6).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -32,13 +32,15 @@ There are two licenses available - MIT and Unlicense. You can choose which one y
 
 ### Changelog
 #### (Rain World v1.9)
-v2.0.5:
+v2.0.6:
 - Added support for Rain World 1.9.
 - Removed AutoUpdate.
 - (uncover region) Should work again.
 - Activated map for sleep screen again. There were some visual issues in the past (mostly for the fast travel screen). I hadn't any so far.
 - Activated map for death screen again.
 - (aerial map) Added this option (enabled by default). When disabled, the default map shader is used in Chimney Canopy and Sky Islands.
+- Restructured code.
+- (creature symbols) Skipping room that are disabled for the map. Otherwise spawned creatures in these rooms can overlap with enabled rooms.
 
 #### (Rain World v1.5)
 v0.20:
