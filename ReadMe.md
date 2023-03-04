@@ -40,7 +40,7 @@ v2.0.6:
 - Activated map for death screen again.
 - (aerial map) Added this option (enabled by default). When disabled, the default map shader is used in Chimney Canopy and Sky Islands.
 - Restructured code.
-- (creature symbols) Skipping room that are disabled for the map. Otherwise spawned creatures in these rooms can overlap with enabled rooms.
+- (creature symbols) Skipping rooms that are disabled for the map. Otherwise symbols for spawned creatures in these rooms can overlap with enabled rooms.
 
 #### (Rain World v1.5)
 v0.20:
