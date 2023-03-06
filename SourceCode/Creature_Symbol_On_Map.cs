@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using static CreatureSymbol;
+using static MapOptions.MainMod;
 using static MapOptions.MapMod;
 
 namespace MapOptions;
@@ -28,6 +29,16 @@ public class Creature_Symbol_On_Map
         get => Symbol_Sprite?.isVisible;
         set
         {
+            if (creature_symbol.shadowSprite1 != null)
+            {
+                creature_symbol.shadowSprite1.isVisible = value ?? false;
+            }
+
+            if (creature_symbol.shadowSprite2 != null)
+            {
+                creature_symbol.shadowSprite2.isVisible = value ?? false;
+            }
+
             if (Symbol_Sprite == null) return;
             Symbol_Sprite.isVisible = value ?? false;
         }
@@ -65,7 +76,8 @@ public class Creature_Symbol_On_Map
         if (Symbol_Sprite != null) return;
 
         // creates symbolSprite and adds it to the container;
-        creature_symbol.Show(false);
+        // creature_symbol.Show(false);
+        creature_symbol.Show(showShadowSprites: Option_ShadowSprites);
 
         if (Symbol_Sprite == null) return;
 
@@ -77,12 +89,31 @@ public class Creature_Symbol_On_Map
         Symbol_Sprite.isVisible = false;
     }
 
+    public void Change_Alpha(HUD.Map map, float time_stacker)
+    {
+        float alpha = map.Alpha(Abstract_Room.layer, time_stacker, false);
+
+        if (creature_symbol.shadowSprite1 != null)
+        {
+            creature_symbol.shadowSprite1.alpha = alpha;
+        }
+
+        if (creature_symbol.shadowSprite2 != null)
+        {
+            creature_symbol.shadowSprite2.alpha = alpha;
+        }
+
+        if (Symbol_Sprite == null) return;
+        Symbol_Sprite.alpha = alpha;
+
+    }
+
     public void Draw(HUD.Map map, float time_stacker, Vector2 in_room_position)
     {
         if (Symbol_Sprite == null) return;
 
         creature_symbol.myColor = Abstract_Room.layer == map.layer ? default_color : new Color(1f, 1f, 1f);
-        Symbol_Sprite.alpha = map.Alpha(Abstract_Room.layer, time_stacker, false);
+        Change_Alpha(map, time_stacker);
         creature_symbol.Draw(time_stacker, map.RoomToMapPos(in_room_position, Abstract_Room.index, time_stacker));
     }
 

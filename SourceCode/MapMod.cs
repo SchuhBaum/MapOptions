@@ -406,7 +406,7 @@ public static class MapMod
         }
 
         OwnerType ownerType = map.hud.owner.GetOwnerType();
-        if (ownerType != OwnerType.Player && ownerType != OwnerType.SleepScreen && ownerType != OwnerType.DeathScreen) return;
+        if (ownerType != OwnerType.Player && ownerType != OwnerType.SleepScreen && ownerType != OwnerType.DeathScreen && (map.hud.owner is not Overseer overseer || !overseer.SafariOverseer)) return;
 
         // already initialized;
         if (map.Get_Attached_Fields() != null) return;
