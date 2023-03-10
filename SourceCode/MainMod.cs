@@ -41,7 +41,7 @@ public class MainMod : BaseUnityPlugin
     // variables
     //
 
-    public static bool isInitialized = false;
+    public static bool is_initialized = false;
 
     //
     // main
@@ -127,8 +127,8 @@ public class MainMod : BaseUnityPlugin
         orig(rainWorld);
         MachineConnector.SetRegisteredOI(MOD_ID, instance);
 
-        if (isInitialized) return;
-        isInitialized = true;
+        if (is_initialized) return;
+        is_initialized = true;
 
         Debug.Log("MapOptions: version " + version);
         MapMod.OnEnable();

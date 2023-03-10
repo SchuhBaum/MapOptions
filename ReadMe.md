@@ -7,7 +7,9 @@ Adds options to configure the map:
 - `(Map Zoom)` The zoom can be adjusted (50%-150%).
 - `(Aerial Map)` When disabled, the default map shader is used in Chimney Canopy and Sky Islands.
 - `(Creature Symbols)` These symbols display what creature types are present in each room.
+- `(Item Tracker)` Tracked key items are shown on the map even when the option 'Slug Senses' is disabled. The option 'Key item tracking' needs to be enabled in Rain World Remix.
 - `(Layer Focus)` Only the active layer is displayed on the map.
+- `(Shadow Sprites)` Draws shadows for creature and slugcat symbols.
 - `(Skip Fade In/Out)` Pressing the map button shows the map with no delay.
 - `(Slugcat Symbols)` Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op Mod is enabled, draws a sprite for each player.
 - `(Uncover Region)` Once loaded into the game the whole region map gets uncovered.
