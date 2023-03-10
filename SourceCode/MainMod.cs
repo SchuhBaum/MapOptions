@@ -10,7 +10,7 @@ using static MapOptions.MainModOptions;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.7")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.8")]
 public class MainMod : BaseUnityPlugin
 {
     //
@@ -19,23 +19,23 @@ public class MainMod : BaseUnityPlugin
 
     public static readonly string MOD_ID = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.0.7";
+    public static readonly string version = "2.0.8";
 
     //
     // options
     //
 
-    public static bool Option_AerialMap => aerialMap.Value;
-    public static bool Option_CreatureSymbols => creatureSymbols.Value;
+    public static bool Option_AerialMap => aerial_map.Value;
+    public static bool Option_CreatureSymbols => creature_symbols.Value;
     public static bool Option_ItemTracker => item_tracker.Value;
 
-    public static bool Option_LayerFocus => layerFocus.Value;
+    public static bool Option_LayerFocus => layer_focus.Value;
     public static bool Option_ShadowSprites => shadow_sprites.Value;
-    public static bool Option_SkipFade => skipFade.Value;
+    public static bool Option_SkipFade => skip_fade.Value;
 
-    public static bool Option_SlugcatSymbols => slugcatSymbols.Value;
-    public static bool Option_UncoverRegion => uncoverRegion.Value;
-    public static bool Option_UncoverRoom => uncoverRoom.Value;
+    public static bool Option_SlugcatSymbols => slugcat_symbols.Value;
+    public static bool Option_UncoverRegion => uncover_region.Value;
+    public static bool Option_UncoverRoom => uncover_room.Value;
 
     //
     // variables

@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using HUD;
-using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
@@ -9,8 +7,8 @@ using UnityEngine;
 
 using static HUD.HUD;
 using static HUD.Map;
-using static MapOptions.AbstractPhysicalObjectMod;
 using static MapOptions.MainMod;
+using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
@@ -20,14 +18,14 @@ public static class MapMod
     // parameters
     //
 
-    public static float creature_symbols_scale = 1f;
-    public static float map_scale = 1f;
-    public static float slugcat_symbols_scale = 1f;
+    public static bool Is_Scaling_Enabled => !(Map_Scale == 1f);
+    public static bool Can_Instant_Reveal => Reveal_Speed_Multiplier == 10;
 
-    public static int reveal_speed_multiplier = 1;
+    public static float Creature_Symbols_Scale => creature_symbol_scale.Value / 10f;
+    public static float Map_Scale => 10f / zoom_slider.Value;
+    public static float Slugcat_Symbols_Scale => slugcat_symbol_scale.Value / 10f;
 
-    public static bool Is_Scaling_Enabled => !(map_scale == 1f);
-    public static bool Can_Instant_Reveal => reveal_speed_multiplier == 10;
+    public static int Reveal_Speed_Multiplier => reveal_speed_multiplier.Value;
 
     //
     // variables
@@ -69,18 +67,10 @@ public static class MapMod
             if (is_enabled)
             {
                 IL.HUD.Map.ItemMarker.Draw += IL_HUD_Map_ItemMarker_Draw;
-
-                IL.HUD.Map.addTracker += IL_HUD_Map_AddTracker;
-                IL.HUD.Map.removeTracker += IL_HUD_Map_RemoveTracker;
-                IL.HUD.Map.Update += IL_HUD_Map_Update;
             }
             else
             {
                 IL.HUD.Map.ItemMarker.Draw -= IL_HUD_Map_ItemMarker_Draw;
-
-                IL.HUD.Map.addTracker -= IL_HUD_Map_AddTracker;
-                IL.HUD.Map.removeTracker -= IL_HUD_Map_RemoveTracker;
-                IL.HUD.Map.Update -= IL_HUD_Map_Update;
             }
         }
     }
@@ -214,12 +204,12 @@ public static class MapMod
 
     public static void Increase_Reveal_Speed(Map map)
     {
-        if (reveal_speed_multiplier == 1) return;
+        if (Reveal_Speed_Multiplier == 1) return;
         if (Can_Instant_Reveal) return;
         if (!map.discLoaded) return;
         if (!map.mapLoaded) return;
 
-        for (int _ = 1; _ < reveal_speed_multiplier - 1; _++)
+        for (int _ = 1; _ < Reveal_Speed_Multiplier - 1; _++)
         {
             if (map.revealPixelsList.Count > 0)
             {
@@ -282,8 +272,8 @@ public static class MapMod
         {
             // this controls how "deep" (front/back) the icons are placed; 
             // needs to align with the texture;
-            map.MapScale /= map_scale;
-            Shader.SetGlobalVector("_mapSize", map.mapSize / map_scale);
+            map.MapScale /= Map_Scale;
+            Shader.SetGlobalVector("_mapSize", map.mapSize / Map_Scale);
         }
 
         if (Option_SlugcatSymbols)
@@ -394,31 +384,6 @@ public static class MapMod
         }
     }
 
-    public static void Update_Item_Marker_Position(Map map)
-    {
-        if (!Option_ItemTracker) return;
-        if (!map.mapLoaded) return;
-        if (!map.discLoaded) return;
-
-        foreach (ItemMarker? item_marker in map.itemMarkers)
-        {
-            if (item_marker == null) continue;
-            if (item_marker.obj is not AbstractPhysicalObject item) continue;
-
-            if (item.realizedObject != null)
-            {
-                item_marker.inRoomPos = item.realizedObject.firstChunk.pos;
-                item_marker.positionSetFromRealized = true;
-                continue;
-            }
-
-            if (item.tracker is not PersistentObjectTracker tracker) continue;
-            IntVector2 tile = tracker.desiredSpawnLocation.Tile;
-            item_marker.inRoomPos = new Vector2(10f + tile.x * 20f, 10f + tile.y * 20f);
-            item_marker.positionSetFromRealized = false;
-        }
-    }
-
     //
     // private
     //
@@ -430,79 +395,13 @@ public static class MapMod
         ILCursor cursor = new(context);
         if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<MMF>("cfgCreatureSense")))
         {
+            // draw item markers even when slug senses are disabled;
             Debug.Log("MapOptions: IL_HUD_Map_ItemMarker_Draw: Index " + cursor.Index); // 3
             cursor.RemoveRange(3);
         }
         else
         {
             Debug.LogException(new System.Exception("MapOptions: IL_HUD_Map_ItemMarker_Draw failed."));
-        }
-
-        // LogAllInstructions(context);
-    }
-
-    private static void IL_HUD_Map_AddTracker(ILContext context) // Option_ItemTracker
-    {
-        // LogAllInstructions(context);
-
-        ILCursor cursor = new(context);
-        cursor.Emit(OpCodes.Ldarg_0); // map
-        cursor.Emit(OpCodes.Ldarg_1); // tracker
-
-        cursor.EmitDelegate<Func<Map, PersistentObjectTracker, bool>>((map, tracker) =>
-        {
-            if (tracker.obj == null) return false;
-            return Has_Item_Marker(map, tracker.obj);
-        });
-
-        ILLabel label = cursor.DefineLabel();
-        cursor.Emit(OpCodes.Brfalse, label);
-        cursor.Emit(OpCodes.Ret);
-        cursor.MarkLabel(label);
-
-        // LogAllInstructions(context);
-    }
-
-    private static void IL_HUD_Map_RemoveTracker(ILContext context) // Option_ItemTracker
-    {
-        // LogAllInstructions(context);
-
-        ILCursor cursor = new(context);
-        if (cursor.TryGotoNext(instruction => instruction.MatchBrfalse(out ILLabel _)))
-        {
-            // skip "return" since item markers and trackers don't need 
-            // to have the same index anymore;
-
-            Debug.Log("MapOptions: IL_HUD_Map_RemoveTracker: Index " + cursor.Index); // 5
-            cursor.RemoveRange(1);
-            cursor.Emit(OpCodes.Pop);
-        }
-        else
-        {
-            Debug.LogException(new System.Exception("MapOptions: IL_HUD_Map_RemoveTracker failed."));
-        }
-
-        // LogAllInstructions(context);
-    }
-
-    private static void IL_HUD_Map_Update(ILContext context) // Option_ItemTracker
-    {
-        // LogAllInstructions(context);
-
-        ILCursor cursor = new(context);
-        if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<ModManager>("MMF")))
-        {
-            // skip the whole update item marker block;
-            // do it manually in Update_Item_Marker_Position();
-
-            Debug.Log("MapOptions: IL_HUD_Map_Update: Index " + cursor.Index); // 848
-
-            object label = cursor.Next.Next.Operand;
-            cursor.Emit(OpCodes.Br, label);
-        }
-        else
-        {
-            Debug.LogException(new System.Exception("MapOptions: IL_HUD_Map_Update failed."));
         }
 
         // LogAllInstructions(context);
@@ -557,7 +456,7 @@ public static class MapMod
         orig(map, hud, map_data);
 
         // no arial maps
-        if (!Option_AerialMap)
+        if (Option_AerialMap)
         {
             map.STANDARDELEMENTLIST[1] = false;
             map.STANDARDELEMENTLIST[2] = false;
@@ -624,10 +523,8 @@ public static class MapMod
             uncovered_rooms.RemoveAt(0);
         }
 
-        Add_Key_Item_Tracker(); // Option_ItemTracker
         Skip_Fade(map); // Option_SkipFade
         orig(map);
-        Update_Item_Marker_Position(map); // Option_ItemTracker
 
         // happens only once;
         // map needs to be loaded from disc first;

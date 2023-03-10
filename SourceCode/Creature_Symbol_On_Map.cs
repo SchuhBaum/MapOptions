@@ -83,7 +83,7 @@ public class Creature_Symbol_On_Map
 
         creature_symbol.showFlash = 0.0f;
         creature_symbol.lastShowFlash = 0.0f;
-        Symbol_Sprite.scale = creature_symbol.critType == CreatureTemplate.Type.Slugcat ? slugcat_symbols_scale : creature_symbols_scale;
+        Symbol_Sprite.scale = creature_symbol.critType == CreatureTemplate.Type.Slugcat ? Slugcat_Symbols_Scale : Creature_Symbols_Scale;
 
         // otherwise they are show in the bottom left corner
         Symbol_Sprite.isVisible = false;
