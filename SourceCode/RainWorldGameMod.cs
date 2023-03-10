@@ -19,7 +19,10 @@ internal static class RainWorldGameMod
         Debug.Log("MapOptions: Add option specific hooks.");
 
         AbstractCreatureMod.On_Toggle();
+        AbstractPhysicalObjectMod.OnToggle();
         AbstractRoomMod.On_Toggle();
+        MapMod.OnToggle();
+
         OverWorldMod.On_Toggle();
         PlayerMod.On_Toggle();
         RegionGateMod.On_Toggle();
@@ -35,7 +38,10 @@ internal static class RainWorldGameMod
         orig(game);
 
         AbstractCreatureMod.On_Toggle();
+        AbstractPhysicalObjectMod.OnToggle();
         AbstractRoomMod.On_Toggle();
+        MapMod.OnToggle();
+
         OverWorldMod.On_Toggle();
         PlayerMod.On_Toggle();
         RegionGateMod.On_Toggle();

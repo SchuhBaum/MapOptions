@@ -14,10 +14,12 @@ public class MainModOptions : OptionInterface
 
     public static Configurable<bool> aerialMap = instance.config.Bind("aerialMap", defaultValue: true, new ConfigurableInfo("When disabled, the default map shader is used in Chimney Canopy and Sky Islands.", null, "", "Aerial Map"));
     public static Configurable<bool> creatureSymbols = instance.config.Bind("creatureSymbols", defaultValue: true, new ConfigurableInfo("Creature symbols are added to the map. These symbols display what creature types are present in each room.", null, "", "Creature Symbols"));
+    public static Configurable<bool> item_tracker = instance.config.Bind("item_tracker", defaultValue: true, new ConfigurableInfo("Tracked key items are shown on the map even when 'Slug Senses' is disabled. Items are tracked after they spawn. 'Key item tracking' needs to be enabled in Rain World Remix.", null, "", "Item Tracker"));
+
     public static Configurable<bool> layerFocus = instance.config.Bind("layerFocus", defaultValue: false, new ConfigurableInfo("Only the active layer is displayed on the map.", null, "", "Layer Focus"));
     public static Configurable<bool> shadow_sprites = instance.config.Bind("shadow_sprites", defaultValue: false, new ConfigurableInfo("Draws shadows for creature and slugcat symbols.", null, "", "Shadow Sprites"));
-
     public static Configurable<bool> skipFade = instance.config.Bind("skipFade", defaultValue: false, new ConfigurableInfo("Pressing the map button shows the map with no delay.", null, "", "Skip Fade In/Out"));
+
     public static Configurable<bool> slugcatSymbols = instance.config.Bind("slugcatSymbols", defaultValue: true, new ConfigurableInfo("Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op is enabled, draws a sprite for each player.", null, "", "Slugcat Symbols"));
     public static Configurable<bool> uncoverRegion = instance.config.Bind("uncoverRegion", defaultValue: false, new ConfigurableInfo("Once loaded into the game the whole region map gets uncovered.\nWARNING: This progress is saved (even without completing a cycle). Turning this option off after saving will *not* remove the gained progress.", null, "", "Uncover Region"));
     public static Configurable<bool> uncoverRoom = instance.config.Bind("uncoverRoom", defaultValue: true, new ConfigurableInfo("When the player enters a room the whole room gets uncovered instead of just the area around slugcat.", null, "", "Uncover Room"));
@@ -95,12 +97,16 @@ public class MainModOptions : OptionInterface
 
         AddCheckBox(aerialMap, (string)aerialMap.info.Tags[0]);
         AddCheckBox(creatureSymbols, (string)creatureSymbols.info.Tags[0]);
+        AddCheckBox(item_tracker, (string)item_tracker.info.Tags[0]);
+
         AddCheckBox(layerFocus, (string)layerFocus.info.Tags[0]);
         AddCheckBox(shadow_sprites, (string)shadow_sprites.info.Tags[0]);
         AddCheckBox(skipFade, (string)skipFade.info.Tags[0]);
+
         AddCheckBox(slugcatSymbols, (string)slugcatSymbols.info.Tags[0]);
         AddCheckBox(uncoverRegion, (string)uncoverRegion.info.Tags[0]);
         AddCheckBox(uncoverRoom, (string)uncoverRoom.info.Tags[0]);
+
         DrawCheckBoxes(ref Tabs[tabIndex]);
 
         AddNewLine();
