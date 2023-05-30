@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>2.0.8</Version>
-		<Nullable>enable</Nullable>
-		<LangVersion>10.0</LangVersion>
+    <Version>2.0.9</Version>
+    <Nullable>enable</Nullable>
+	<LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

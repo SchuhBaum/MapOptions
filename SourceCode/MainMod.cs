@@ -10,7 +10,7 @@ using static MapOptions.MainModOptions;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.8")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.0.9")]
 public class MainMod : BaseUnityPlugin
 {
     //
@@ -19,7 +19,7 @@ public class MainMod : BaseUnityPlugin
 
     public static readonly string MOD_ID = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.0.8";
+    public static readonly string version = "2.0.9";
 
     //
     // options

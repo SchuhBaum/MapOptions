@@ -63,7 +63,7 @@ public class MainModOptions : OptionInterface
     // main
     //
 
-    public MainModOptions() => OnConfigChanged += MainModOptions_OnConfigChanged;
+    private MainModOptions() => OnConfigChanged += MainModOptions_OnConfigChanged;
 
     //
     // public

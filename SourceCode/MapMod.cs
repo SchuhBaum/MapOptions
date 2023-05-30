@@ -299,7 +299,7 @@ public static class MapMod
     public static void Focus_Layer(Map map, float time_stacker)
     {
         if (!Option_LayerFocus) return;
-        if (map.visible) return;
+        if (!map.visible) return;
 
         map.depth = map.layer;
         map.lastDepth = map.depth;
