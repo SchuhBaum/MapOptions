@@ -27,7 +27,7 @@ Please post bugs on the Rain World Discord server in the channel #modding-suppor
 https://discord.gg/rainworld
 
 ### Contact
-If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write an email to SchuhBaum71@gmail.com.  
+If you have feedback, you can message me on Discord `@schuhbaum` or write an email to SchuhBaum71@gmail.com.  
 
 ### License  
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use.
