@@ -2,7 +2,7 @@ using static MapOptions.MainMod;
 
 namespace MapOptions;
 
-internal static class OverWorldMod
+public static class OverWorldMod
 {
     //
     // variables
