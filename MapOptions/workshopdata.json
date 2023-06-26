@@ -1,0 +1,17 @@
+{
+  "Title": "MapOptions",
+  "Description": "Adds options to configure the map.",
+  "ID": "MapOptions",
+  "Version": "2.1.0",
+  "TargetGameVersion": "",
+  "Requirements": "",
+  "RequirementNames": "",
+  "Authors": "SchuhBaum",
+  "Visibility": "Public",
+  "Tags": [
+    "Game Mechanics",
+    "Accessibility"
+  ],
+  "WorkshopID": 2923374705,
+  "UploadFilesOnly": true
+}
