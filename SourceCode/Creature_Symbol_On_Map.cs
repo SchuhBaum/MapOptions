@@ -55,7 +55,7 @@ public class Creature_Symbol_On_Map
         this.abstract_creature = abstract_creature;
         creature_symbol = new(SymbolDataFromCreature(abstract_creature), container);
 
-        if (abstract_creature.realizedCreature is Player player)
+        if (abstract_creature.realizedCreature is Player player && !player.isNPC)
         {
             default_color = PlayerGraphics.SlugcatColor(player.playerState.slugcatCharacter);
             creature_symbol.myColor = default_color;

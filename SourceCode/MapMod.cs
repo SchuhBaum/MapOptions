@@ -53,9 +53,10 @@ public static class MapMod
     {
         On.HUD.Map.Alpha += HUD_Map_Alpha;
         On.HUD.Map.ClearSprites += HUD_Map_ClearSprites;
-        On.HUD.Map.ctor += HUD_Map_ctor;
-
+        On.HUD.Map.ctor += HUD_Map_Ctor;
         On.HUD.Map.Draw += HUD_Map_Draw;
+
+        On.HUD.Map.RevealAllDiscovered += HUD_Map_RevealAllDiscovered;
         On.HUD.Map.Update += HUD_Map_Update;
     }
 
@@ -451,7 +452,7 @@ public static class MapMod
         all_attached_fields.Remove(map);
     }
 
-    private static void HUD_Map_ctor(On.HUD.Map.orig_ctor orig, Map map, HUD.HUD hud, MapData map_data)
+    private static void HUD_Map_Ctor(On.HUD.Map.orig_ctor orig, Map map, HUD.HUD hud, MapData map_data)
     {
         orig(map, hud, map_data);
 
@@ -507,6 +508,13 @@ public static class MapMod
         {
             slugcat_symbol.Is_Visible = false;
         }
+    }
+
+    private static void HUD_Map_RevealAllDiscovered(On.HUD.Map.orig_RevealAllDiscovered orig, Map map)
+    {
+        // otherwise this lags the game while in-game text messages are displayed;
+        if (map.hud.HideGeneralHud) return;
+        orig(map);
     }
 
     private static void HUD_Map_Update(On.HUD.Map.orig_Update orig, Map map)
