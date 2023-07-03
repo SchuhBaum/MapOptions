@@ -55,17 +55,16 @@ v2.1.0:
 - Added pdb file for debugging.
 
 #### (Rain World v1.5)
-v0.20:
-- Added the option to skip the fade in/out animation when opening/closing the map.
-
-v0.30:
-- Added the option to display a slugcat sprite at the players position instead of a red circle (enabled by default). When JollyCoop Mod is used, you can see a slugcat sprite for each player.
-
-v0.40:
-- Added support for AutoUpdate.
-- Added slider to customize the size of creature and slugcat sprites.
-- Hides creature sprites when they are in a den.
-- Fixed a bug where slugcat sprites were not deleted properly.
+v0.59:
+- Fixed two bugs where variables were not deleted properly.
+- Restructered code.
+- Uncover room option should be more reliable now.
+- Switched to BepInEx plugin.
+- Fixed a bug where creature symbols were not cleared.
+- Restructured code.
+- Fixed a bug where JollyCoop became a mandatory dependency.
+- Fixed a bug where the dependency checks would fail when using the modloader Realm.
+- (uncover room and uncover region options) Slightly increased the (reveal) area of rooms. Otherwise, some connections to other rooms might not get immediately uncovered.
 
 v0.50:
 - Restructured code. Logging more stuff.
@@ -79,13 +78,14 @@ v0.50:
 - Various changes to support multiple maps / cameras.
 - Added an option to increase the reveal speed. Default value is one. The option instant reveal is removed or rather included in this one.
 
-v0.59:
-- Fixed two bugs where variables were not deleted properly.
-- Restructered code.
-- Uncover room option should be more reliable now.
-- Switched to BepInEx plugin.
-- Fixed a bug where creature symbols were not cleared.
-- Restructured code.
-- Fixed a bug where JollyCoop became a mandatory dependency.
-- Fixed a bug where the dependency checks would fail when using the modloader Realm.
-- (uncover room and uncover region options) Slightly increased the (reveal) area of rooms. Otherwise, some connections to other rooms might not get immediately uncovered.
+v0.40:
+- Added support for AutoUpdate.
+- Added slider to customize the size of creature and slugcat sprites.
+- Hides creature sprites when they are in a den.
+- Fixed a bug where slugcat sprites were not deleted properly.
+
+v0.30:
+- Added the option to display a slugcat sprite at the players position instead of a red circle (enabled by default). When JollyCoop Mod is used, you can see a slugcat sprite for each player.
+
+v0.20:
+- Added the option to skip the fade in/out animation when opening/closing the map.
