@@ -11,7 +11,7 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.2")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.3")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -19,7 +19,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.1.2";
+    public static readonly string version = "2.1.3";
 
     //
     // options
@@ -116,7 +116,7 @@ public class MainMod : BaseUnityPlugin {
         if (_is_initialized) return;
         _is_initialized = true;
 
-        Debug.Log("MapOptions: version " + version);
+        Debug.Log(mod_id + ": version " + version);
         MapMod.OnEnable();
         ProcessManagerMod.OnEnable();
     }

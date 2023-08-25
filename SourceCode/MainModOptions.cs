@@ -137,24 +137,24 @@ public class MainModOptions : OptionInterface {
     }
 
     public void Log_All_Options() {
-        Debug.Log("MapOptions: Creature_Symbols_Scale " + Creature_Symbols_Scale);
-        Debug.Log("MapOptions: Map_Scale " + Map_Scale);
-        Debug.Log("MapOptions: Slugcat_Symbols_Scale " + Slugcat_Symbols_Scale);
+        Debug.Log(mod_id + ": Creature_Symbols_Scale " + Creature_Symbols_Scale);
+        Debug.Log(mod_id + ": Map_Scale " + Map_Scale);
+        Debug.Log(mod_id + ": Slugcat_Symbols_Scale " + Slugcat_Symbols_Scale);
 
-        Debug.Log("MapOptions: Reveal_Speed_Multiplier " + Reveal_Speed_Multiplier);
-        Debug.Log("MapOptions: Can_Instant_Reveal " + Can_Instant_Reveal);
+        Debug.Log(mod_id + ": Reveal_Speed_Multiplier " + Reveal_Speed_Multiplier);
+        Debug.Log(mod_id + ": Can_Instant_Reveal " + Can_Instant_Reveal);
 
-        Debug.Log("MapOptions: Option_AerialMap " + Option_AerialMap);
-        Debug.Log("MapOptions: Option_CreatureSymbols " + Option_CreatureSymbols);
-        Debug.Log("MapOptions: Option_ItemTracker " + Option_ItemTracker);
+        Debug.Log(mod_id + ": Option_AerialMap " + Option_AerialMap);
+        Debug.Log(mod_id + ": Option_CreatureSymbols " + Option_CreatureSymbols);
+        Debug.Log(mod_id + ": Option_ItemTracker " + Option_ItemTracker);
 
-        Debug.Log("MapOptions: Option_LayerFocus " + Option_LayerFocus);
-        Debug.Log("MapOptions: Option_ShadowSprites " + Option_ShadowSprites);
-        Debug.Log("MapOptions: Option_SkipFade " + Option_SkipFade);
+        Debug.Log(mod_id + ": Option_LayerFocus " + Option_LayerFocus);
+        Debug.Log(mod_id + ": Option_ShadowSprites " + Option_ShadowSprites);
+        Debug.Log(mod_id + ": Option_SkipFade " + Option_SkipFade);
 
-        Debug.Log("MapOptions: Option_SlugcatSymbols " + Option_SlugcatSymbols);
-        Debug.Log("MapOptions: Option_UncoverRegion " + Option_UncoverRegion);
-        Debug.Log("MapOptions: Option_UncoverRoom " + Option_UncoverRoom);
+        Debug.Log(mod_id + ": Option_SlugcatSymbols " + Option_SlugcatSymbols);
+        Debug.Log(mod_id + ": Option_UncoverRegion " + Option_UncoverRegion);
+        Debug.Log(mod_id + ": Option_UncoverRoom " + Option_UncoverRoom);
     }
 
     //

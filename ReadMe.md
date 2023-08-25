@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.1.2
+###### Version: 2.1.3
 This is a mod for Rain World v1.9.
 
 ### Description
@@ -18,7 +18,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.2).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.3).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -34,11 +34,12 @@ There are two licenses available - MIT and Unlicense. You can choose which one y
 
 ### Changelog
 #### (Rain World v1.9)
-v2.1.2:
+v2.1.3:
 - Fixed a bug that could lag the game when you would try to open the map while an in-game text message is displayed.
 - (creature symbols) Fixed a bug where slugcat npc symbols would have the same color as the player.
 - (creature symbols) Fixed a bug where a NullReference exeption was thrown when the room of the creature could not be found.
 - (creature symbols) Removed that symbols are shown in shelters. Vanilla already shows symbols for items and creatures in shelters.
+- Changed the hook initialization logic. This should reduce the log spam from IL hooks. Instead of doing it every cycle while in-game they are initialized when starting the game or when changing the options.
 
 v2.1.0:
 - Added support for Rain World 1.9.

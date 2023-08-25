@@ -347,10 +347,15 @@ public static class MapMod {
         ILCursor cursor = new(context);
         if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<MMF>("cfgCreatureSense"))) {
             // draw item markers even when slug senses are disabled;
-            Debug.Log("MapOptions: IL_HUD_Map_ItemMarker_Draw: Index " + cursor.Index); // 3
+            if (can_log_il_hooks) {
+                Debug.Log(mod_id + ": IL_HUD_Map_ItemMarker_Draw: Index " + cursor.Index); // 3
+            }
             cursor.RemoveRange(3);
         } else {
-            Debug.LogException(new System.Exception("MapOptions: IL_HUD_Map_ItemMarker_Draw failed."));
+            if (can_log_il_hooks) {
+                Debug.Log(mod_id + ": IL_HUD_Map_ItemMarker_Draw could not be applied.");
+            }
+            return;
         }
 
         // LogAllInstructions(context);
