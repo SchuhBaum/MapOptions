@@ -1,8 +1,7 @@
-using System.Security.Permissions;
 using BepInEx;
 using MonoMod.Cil;
+using System.Security.Permissions;
 using UnityEngine;
-
 using static MapOptions.MainModOptions;
 
 // allows access to private members;
@@ -12,16 +11,15 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.1")]
-public class MainMod : BaseUnityPlugin
-{
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.2")]
+public class MainMod : BaseUnityPlugin {
     //
     // meta data
     //
 
-    public static readonly string MOD_ID = "MapOptions";
+    public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.1.1";
+    public static readonly string version = "2.1.2";
 
     //
     // options
@@ -43,7 +41,8 @@ public class MainMod : BaseUnityPlugin
     // variables
     //
 
-    public static bool is_initialized = false;
+    public static bool can_log_il_hooks = false;
+    private static bool _is_initialized = false;
 
     //
     // main
@@ -56,64 +55,50 @@ public class MainMod : BaseUnityPlugin
     // public
     //
 
-    public static void LogAllInstructions(ILContext? context, int indexStringLength = 9, int opCodeStringLength = 14)
-    {
+    public static void LogAllInstructions(ILContext? context, int index_string_length = 9, int op_code_string_length = 14) {
         if (context == null) return;
 
         Debug.Log("-----------------------------------------------------------------");
         Debug.Log("Log all IL-instructions.");
-        Debug.Log("Index:" + new string(' ', indexStringLength - 6) + "OpCode:" + new string(' ', opCodeStringLength - 7) + "Operand:");
+        Debug.Log("Index:" + new string(' ', index_string_length - 6) + "OpCode:" + new string(' ', op_code_string_length - 7) + "Operand:");
 
         ILCursor cursor = new(context);
-        ILCursor labelCursor = cursor.Clone();
+        ILCursor label_cursor = cursor.Clone();
 
-        string cursorIndexString;
-        string opCodeString;
-        string operandString;
+        string cursor_index_string;
+        string op_code_string;
+        string operand_string;
 
-        while (true)
-        {
+        while (true) {
             // this might return too early;
             // if (cursor.Next.MatchRet()) break;
 
             // should always break at some point;
             // only TryGotoNext() doesn't seem to be enough;
             // it still throws an exception;
-            try
-            {
-                if (cursor.TryGotoNext(MoveType.Before))
-                {
-                    cursorIndexString = cursor.Index.ToString();
-                    cursorIndexString = cursorIndexString.Length < indexStringLength ? cursorIndexString + new string(' ', indexStringLength - cursorIndexString.Length) : cursorIndexString;
-                    opCodeString = cursor.Next.OpCode.ToString();
+            try {
+                if (cursor.TryGotoNext(MoveType.Before)) {
+                    cursor_index_string = cursor.Index.ToString();
+                    cursor_index_string = cursor_index_string.Length < index_string_length ? cursor_index_string + new string(' ', index_string_length - cursor_index_string.Length) : cursor_index_string;
+                    op_code_string = cursor.Next.OpCode.ToString();
 
-                    if (cursor.Next.Operand is ILLabel label)
-                    {
-                        labelCursor.GotoLabel(label);
-                        operandString = "Label >>> " + labelCursor.Index;
-                    }
-                    else
-                    {
-                        operandString = cursor.Next.Operand?.ToString() ?? "";
+                    if (cursor.Next.Operand is ILLabel label) {
+                        label_cursor.GotoLabel(label);
+                        operand_string = "Label >>> " + label_cursor.Index;
+                    } else {
+                        operand_string = cursor.Next.Operand?.ToString() ?? "";
                     }
 
-                    if (operandString == "")
-                    {
-                        Debug.Log(cursorIndexString + opCodeString);
+                    if (operand_string == "") {
+                        Debug.Log(cursor_index_string + op_code_string);
+                    } else {
+                        op_code_string = op_code_string.Length < op_code_string_length ? op_code_string + new string(' ', op_code_string_length - op_code_string.Length) : op_code_string;
+                        Debug.Log(cursor_index_string + op_code_string + operand_string);
                     }
-                    else
-                    {
-                        opCodeString = opCodeString.Length < opCodeStringLength ? opCodeString + new string(' ', opCodeStringLength - opCodeString.Length) : opCodeString;
-                        Debug.Log(cursorIndexString + opCodeString + operandString);
-                    }
-                }
-                else
-                {
+                } else {
                     break;
                 }
-            }
-            catch
-            {
+            } catch {
                 break;
             }
         }
@@ -124,16 +109,15 @@ public class MainMod : BaseUnityPlugin
     // private
     //
 
-    private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld rainWorld)
-    {
-        orig(rainWorld);
-        MachineConnector.SetRegisteredOI(MOD_ID, instance);
+    private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld rain_world) {
+        orig(rain_world);
+        MachineConnector.SetRegisteredOI(mod_id, main_mod_options);
 
-        if (is_initialized) return;
-        is_initialized = true;
+        if (_is_initialized) return;
+        _is_initialized = true;
 
         Debug.Log("MapOptions: version " + version);
         MapMod.OnEnable();
-        RainWorldGameMod.OnEnable();
+        ProcessManagerMod.OnEnable();
     }
 }

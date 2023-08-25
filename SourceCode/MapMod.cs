@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using HUD;
+using IL;
 using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
+using System.Collections.Generic;
 using UnityEngine;
-
 using static HUD.HUD;
 using static HUD.Map;
 using static MapOptions.MainMod;
@@ -12,8 +12,7 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-public static class MapMod
-{
+public static class MapMod {
     //
     // parameters
     //
@@ -31,14 +30,11 @@ public static class MapMod
     // variables
     //
 
-    internal static readonly Dictionary<Map, AttachedFields> all_attached_fields = new();
-    public static AttachedFields? Get_Attached_Fields(this Map map)
-    {
-        all_attached_fields.TryGetValue(map, out AttachedFields? attachedFields);
-        return attachedFields;
+    internal static readonly Dictionary<Map, AttachedFields> _all_attached_fields = new();
+    public static AttachedFields? Get_Attached_Fields(this Map map) {
+        _all_attached_fields.TryGetValue(map, out AttachedFields? attached_fields);
+        return attached_fields;
     }
-
-    private static bool is_enabled = false;
 
     public static List<AbstractRoom> uncovered_rooms = new();
 
@@ -49,8 +45,7 @@ public static class MapMod
     // this needs to be separate;
     // the map is active outside of the game process;
     // OnToggle() is not enough;
-    internal static void OnEnable()
-    {
+    internal static void OnEnable() {
         On.HUD.Map.Alpha += HUD_Map_Alpha;
         On.HUD.Map.ClearSprites += HUD_Map_ClearSprites;
         On.HUD.Map.ctor += HUD_Map_Ctor;
@@ -60,19 +55,10 @@ public static class MapMod
         On.HUD.Map.Update += HUD_Map_Update;
     }
 
-    internal static void OnToggle()
-    {
-        is_enabled = !is_enabled;
-        if (Option_ItemTracker)
-        {
-            if (is_enabled)
-            {
-                IL.HUD.Map.ItemMarker.Draw += IL_HUD_Map_ItemMarker_Draw;
-            }
-            else
-            {
-                IL.HUD.Map.ItemMarker.Draw -= IL_HUD_Map_ItemMarker_Draw;
-            }
+    internal static void On_Config_Changed() {
+        IL.HUD.Map.ItemMarker.Draw -= IL_HUD_Map_ItemMarker_Draw;
+        if (Option_ItemTracker) {
+            IL.HUD.Map.ItemMarker.Draw += IL_HUD_Map_ItemMarker_Draw;
         }
     }
 
@@ -86,8 +72,7 @@ public static class MapMod
     // public
     //
 
-    public static void Draw_Creature_Symbols(Map map, float time_stacker)
-    {
+    public static void Draw_Creature_Symbols(Map map, float time_stacker) {
         if (!Option_CreatureSymbols) return;
         if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
 
@@ -95,39 +80,39 @@ public static class MapMod
         Dictionary<AbstractRoom, List<CreatureTemplate.Type>> creature_types_sorted_by_room = new();
 
         // sort
-        for (int symbolIndex = attached_fields.creature_symbols.Count - 1; symbolIndex >= 0; --symbolIndex)
-        {
-            Creature_Symbol_On_Map creature_symbol = attached_fields.creature_symbols[symbolIndex];
-            if (creature_symbol.Is_Creature_Dead) // don't show dead creatures
-            {
+        for (int symbol_index = attached_fields.creature_symbols.Count - 1; symbol_index >= 0; --symbol_index) {
+            Creature_Symbol_On_Map creature_symbol = attached_fields.creature_symbols[symbol_index];
+            if (creature_symbol.Is_Creature_Dead) { // don't show dead creatures
                 creature_symbol.Remove_Sprites();
-                attached_fields.creature_symbols.RemoveAt(symbolIndex);
+                attached_fields.creature_symbols.RemoveAt(symbol_index);
                 continue;
             }
 
-            if (creature_symbol.Is_Creature_In_Den)
-            {
+            if (creature_symbol.Is_Creature_In_Den()) {
                 creature_symbol.Is_Visible = false;
                 continue;
             }
 
-            AbstractRoom abstract_room = creature_symbol.Abstract_Room;
-            if (!creature_symbols_sorted_by_room.ContainsKey(abstract_room))
-            {
-                creature_symbols_sorted_by_room.Add(abstract_room, new());
+            // creature symbols are already drawn in shelters in vanilla; otherwise they
+            // might overlap;
+            if (creature_symbol.Abstract_Room == null || creature_symbol.Abstract_Room.shelter) {
+                creature_symbol.Is_Visible = false;
+                continue;
             }
 
-            if (!creature_types_sorted_by_room.ContainsKey(abstract_room))
-            {
-                creature_types_sorted_by_room.Add(abstract_room, new());
+            if (!creature_symbols_sorted_by_room.ContainsKey(creature_symbol.Abstract_Room)) {
+                creature_symbols_sorted_by_room.Add(creature_symbol.Abstract_Room, new());
             }
 
-            List<Creature_Symbol_On_Map> creature_symbols_in_room = creature_symbols_sorted_by_room[abstract_room];
-            List<CreatureTemplate.Type> creature_types_in_room = creature_types_sorted_by_room[abstract_room];
+            if (!creature_types_sorted_by_room.ContainsKey(creature_symbol.Abstract_Room)) {
+                creature_types_sorted_by_room.Add(creature_symbol.Abstract_Room, new());
+            }
+
+            List<Creature_Symbol_On_Map> creature_symbols_in_room = creature_symbols_sorted_by_room[creature_symbol.Abstract_Room];
+            List<CreatureTemplate.Type> creature_types_in_room = creature_types_sorted_by_room[creature_symbol.Abstract_Room];
             CreatureTemplate.Type creature_type = creature_symbol.abstract_creature.creatureTemplate.type;
 
-            if (creature_types_in_room.Contains(creature_type))
-            {
+            if (creature_types_in_room.Contains(creature_type)) {
                 creature_symbol.Is_Visible = false;
                 continue;
             }
@@ -137,22 +122,19 @@ public static class MapMod
         }
 
         // draw
-        foreach (AbstractRoom abstract_room in creature_symbols_sorted_by_room.Keys)
-        {
+        foreach (AbstractRoom abstract_room in creature_symbols_sorted_by_room.Keys) {
             // in GW when using spearmaster there are rooms that are disabled but creature still spawn;
             if (abstract_room.world.DisabledMapRooms.Contains(abstract_room.name)) continue;
 
             List<Creature_Symbol_On_Map> creature_symbols_in_room = creature_symbols_sorted_by_room[abstract_room];
             float room_width_per_creature = map.mapData.SizeOfRoom(abstract_room.index).x / (creature_symbols_in_room.Count + 1f);
 
-            for (int symbol_index = 0; symbol_index < creature_symbols_in_room.Count; ++symbol_index)
-            {
+            for (int symbol_index = 0; symbol_index < creature_symbols_in_room.Count; ++symbol_index) {
                 Creature_Symbol_On_Map creature_symbol = creature_symbols_in_room[symbol_index];
                 Vector2 in_room_position = new(room_width_per_creature * (symbol_index + 1) * 20f, map.mapData.SizeOfRoom(abstract_room.index).y * 10f);
                 IntVector2 on_reveal_texture_position = IntVector2.FromVector2(map.OnTexturePos(in_room_position, abstract_room.index, true) / map.DiscoverResolution);
 
-                if (map.revealTexture.GetPixel(on_reveal_texture_position.x, on_reveal_texture_position.y).r < 0.5f)
-                {
+                if (map.revealTexture.GetPixel(on_reveal_texture_position.x, on_reveal_texture_position.y).r < 0.5f) {
                     // hide symbols that are not revealed
                     creature_symbol.Is_Visible = false;
                     continue;
@@ -164,24 +146,25 @@ public static class MapMod
         }
     }
 
-    public static void Draw_Slugcat_Symbols(Map map, float time_stacker)
-    {
+    public static void Draw_Slugcat_Symbols(Map map, float time_stacker) {
         if (!Option_SlugcatSymbols) return;
         if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
 
-        foreach (Creature_Symbol_On_Map slugcat_symbol in attached_fields.slugcat_symbols)
-        {
-            if (slugcat_symbol.abstract_creature.realizedCreature is not Player player || player.room == null)
-            {
+        foreach (Creature_Symbol_On_Map slugcat_symbol in attached_fields.slugcat_symbols) {
+            if (slugcat_symbol.abstract_creature.realizedCreature is not Player player || player.room == null) {
                 // hide non-realized player
                 // like in jollycoop when they are dead and in offscreen den
                 slugcat_symbol.Is_Visible = false;
                 continue;
             }
 
+            if (slugcat_symbol.Abstract_Room == null) {
+                slugcat_symbol.Is_Visible = false;
+                continue;
+            }
+
             IntVector2 on_reveal_texture_position = IntVector2.FromVector2(map.OnTexturePos(player.mainBodyChunk.pos, slugcat_symbol.Abstract_Room.index, true) / map.DiscoverResolution);
-            if (map.revealTexture.GetPixel(on_reveal_texture_position.x, on_reveal_texture_position.y).r < 0.5f)
-            {
+            if (map.revealTexture.GetPixel(on_reveal_texture_position.x, on_reveal_texture_position.y).r < 0.5f) {
                 // hide symbols that are not revealed
                 // can only happen in multiplayer
                 slugcat_symbol.Is_Visible = false;
@@ -193,133 +176,109 @@ public static class MapMod
         }
     }
 
-    public static bool Has_Item_Marker(Map map, AbstractPhysicalObject item)
-    {
-        foreach (ItemMarker old_item_marker in map.itemMarkers)
-        {
+    public static bool Has_Item_Marker(Map map, AbstractPhysicalObject item) {
+        foreach (ItemMarker old_item_marker in map.itemMarkers) {
             if (old_item_marker.obj != item) continue;
             return true;
         }
         return false;
     }
 
-    public static void Increase_Reveal_Speed(Map map)
-    {
+    public static void Increase_Reveal_Speed(Map map) {
         if (Reveal_Speed_Multiplier == 1) return;
         if (Can_Instant_Reveal) return;
         if (!map.discLoaded) return;
         if (!map.mapLoaded) return;
 
-        for (int _ = 1; _ < Reveal_Speed_Multiplier - 1; _++)
-        {
-            if (map.revealPixelsList.Count > 0)
-            {
+        for (int _ = 1; _ < Reveal_Speed_Multiplier - 1; _++) {
+            if (map.revealPixelsList.Count > 0) {
                 map.RevealRoutine();
             }
 
-            if (map.revealFadePixels.Count > 0)
-            {
+            if (map.revealFadePixels.Count > 0) {
                 map.FadeRoutine();
             }
         }
     }
 
-    public static void Initialize_Creature_Symbols(Map map, RainWorldGame game)
-    {
+    public static void Initialize_Creature_Symbols(Map map, RainWorldGame game) {
         // add creature and slugcat symbols of creatures that were already created
         if (!Option_CreatureSymbols) return;
-        if (map.Get_Attached_Fields() is not AttachedFields attachedFields) return;
-        if (attachedFields.creature_symbols.Count > 0) return;
+        if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
+        if (attached_fields.creature_symbols.Count > 0) return;
 
-        foreach (AbstractRoom abstractRoom in game.world.abstractRooms)
-        {
+        foreach (AbstractRoom abstract_room in game.world.abstractRooms) {
             // not in dens
-            foreach (AbstractCreature abstractCreature in abstractRoom.creatures)
-            {
-                if (!AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
-                {
-                    attachedFields.creature_symbols.Add(new Creature_Symbol_On_Map(abstractCreature, map.inFrontContainer));
+            foreach (AbstractCreature abstract_creature in abstract_room.creatures) {
+                if (!AbstractCreatureMod.creature_type_blacklist.Contains(abstract_creature.creatureTemplate.type)) {
+                    attached_fields.creature_symbols.Add(new Creature_Symbol_On_Map(abstract_creature, map.inFrontContainer));
                 }
             }
 
             // in dens
-            foreach (AbstractWorldEntity abstractWorldEntity in abstractRoom.entitiesInDens)
-            {
-                if (abstractWorldEntity is AbstractCreature abstractCreature && !AbstractCreatureMod.creatureTypeBlacklist.Contains(abstractCreature.creatureTemplate.type))
-                {
-                    attachedFields.creature_symbols.Add(new Creature_Symbol_On_Map(abstractCreature, map.inFrontContainer));
+            foreach (AbstractWorldEntity abstract_world_entity in abstract_room.entitiesInDens) {
+                if (abstract_world_entity is AbstractCreature abstract_creature && !AbstractCreatureMod.creature_type_blacklist.Contains(abstract_creature.creatureTemplate.type)) {
+                    attached_fields.creature_symbols.Add(new Creature_Symbol_On_Map(abstract_creature, map.inFrontContainer));
                 }
             }
         }
 
-        foreach (AbstractCreature abstractPlayer in game.Players)
-        {
-            if (abstractPlayer.realizedCreature is Player player)
-            {
-                PlayerMod.RemoveObjectInStomachSymbol(player);
+        foreach (AbstractCreature abstract_player in game.Players) {
+            if (abstract_player.realizedCreature is Player player) {
+                PlayerMod.Remove_ObjectInStomach_Symbol(player);
             }
         }
     }
 
-    public static void Initialize_Map_Variables(Map map)
-    {
+    public static void Initialize_Map_Variables(Map map) {
         if (!map.discLoaded) return;
         if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
 
         if (attached_fields.is_map_loaded) return;
         attached_fields.is_map_loaded = true;
 
-        if (Is_Scaling_Enabled)
-        {
+        if (Is_Scaling_Enabled) {
             // this controls how "deep" (front/back) the icons are placed; 
             // needs to align with the texture;
             map.MapScale /= Map_Scale;
             Shader.SetGlobalVector("_mapSize", map.mapSize / Map_Scale);
         }
 
-        if (Option_SlugcatSymbols)
-        {
+        if (Option_SlugcatSymbols) {
             map.playerMarker?.ClearSprite();
             map.playerMarker = null;
         }
         map.revealAllDiscovered = Can_Instant_Reveal;
     }
 
-    public static void Initialize_Slugcat_Symbols(Map map, RainWorldGame game)
-    {
+    public static void Initialize_Slugcat_Symbols(Map map, RainWorldGame game) {
         if (!Option_SlugcatSymbols) return;
-        if (map.Get_Attached_Fields() is not AttachedFields attachedFields) return;
-        if (attachedFields.slugcat_symbols.Count > 0) return;
+        if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
+        if (attached_fields.slugcat_symbols.Count > 0) return;
 
-        foreach (AbstractCreature abstractPlayer in game.Players)
-        {
-            attachedFields.slugcat_symbols.Add(new Creature_Symbol_On_Map(abstractPlayer, map.inFrontContainer));
+        foreach (AbstractCreature abstract_player in game.Players) {
+            attached_fields.slugcat_symbols.Add(new Creature_Symbol_On_Map(abstract_player, map.inFrontContainer));
         }
     }
 
-    public static void Focus_Layer(Map map, float time_stacker)
-    {
+    public static void Focus_Layer(Map map, float time_stacker) {
         if (!Option_LayerFocus) return;
         if (!map.visible) return;
 
         map.depth = map.layer;
         map.lastDepth = map.depth;
 
-        if (map.playerMarker?.sprite != null)
-        {
+        if (map.playerMarker?.sprite != null) {
             map.playerMarker.fade = map.Alpha(map.mapData.LayerOfRoom(map.hud.owner.MapOwnerRoom), time_stacker, false);
         }
 
-        foreach (SwarmCircle swarm_circle in map.swarmCircles)
-        {
+        foreach (SwarmCircle swarm_circle in map.swarmCircles) {
             if (swarm_circle.circle == null) continue;
             swarm_circle.circle.fade = map.Alpha(map.mapData.LayerOfRoom(swarm_circle.room), time_stacker, false);
         }
 
-        foreach (MapObject map_object in map.mapObjects)
-        {
-            if (map_object is FadeInMarker fade_in_marker)
-            {
+        foreach (MapObject map_object in map.mapObjects) {
+            if (map_object is FadeInMarker fade_in_marker) {
                 fade_in_marker.fade = map.Alpha(map.mapData.LayerOfRoom(fade_in_marker.room), time_stacker, false);
                 continue;
             }
@@ -328,22 +287,19 @@ public static class MapMod
             float alpha = map.Alpha(map.mapData.LayerOfRoom(shelter_marker.room), time_stacker, false);
             shelter_marker.fade = alpha;
 
-            foreach (ShelterMarker.ItemInShelterMarker item_in_shelter_marker in shelter_marker.items)
-            {
+            foreach (ShelterMarker.ItemInShelterMarker item_in_shelter_marker in shelter_marker.items) {
                 if (item_in_shelter_marker.symbol?.symbolSprite is not FSprite symbol_sprite) continue;
                 symbol_sprite.alpha = alpha;
             }
         }
     }
 
-    public static void Skip_Fade(Map map)
-    {
+    public static void Skip_Fade(Map map) {
         if (!Option_SkipFade) return;
         if (!map.mapLoaded) return;
         if (!map.discLoaded) return;
 
-        if (!map.hud.owner.RevealMap)
-        {
+        if (!map.hud.owner.RevealMap) {
             map.fadeCounter = 0;
             map.fade = 0.0f;
             map.lastFade = 0.0f;
@@ -360,25 +316,21 @@ public static class MapMod
         map.RevealAllDiscovered();
     }
 
-    public static void Uncover_Room(Map map, AbstractRoom abstract_room)
-    {
+    public static void Uncover_Room(Map map, AbstractRoom abstract_room) {
         if (map.discoverTexture == null) return;
 
         // increase the area of rooms;
         // otherwise some connections might not get immediately uncoverd;
-        IntVector2 startPosition = IntVector2.FromVector2(map.OnTexturePos(new Vector2(-60f, -60f), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
-        IntVector2 endPosition = IntVector2.FromVector2(map.OnTexturePos(abstract_room.size.ToVector2() * 20f + new Vector2(60f, 60f), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
+        IntVector2 start_position = IntVector2.FromVector2(map.OnTexturePos(new Vector2(-60f, -60f), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
+        IntVector2 end_position = IntVector2.FromVector2(map.OnTexturePos(abstract_room.size.ToVector2() * 20f + new Vector2(60f, 60f), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
 
-        if (map.discoverTexture.GetPixel(startPosition.x, startPosition.y).r == 0.0f ||
-            map.discoverTexture.GetPixel(startPosition.x, endPosition.y).r == 0.0f ||
-            map.discoverTexture.GetPixel(endPosition.x, startPosition.y).r == 0.0f ||
-            map.discoverTexture.GetPixel(endPosition.x, endPosition.y).r == 0.0f ||
-            map.discoverTexture.GetPixel(UnityEngine.Random.Range(startPosition.x, endPosition.x), UnityEngine.Random.Range(startPosition.y, endPosition.y)).r == 0.0f)
-        {
-            for (int x = startPosition.x; x < endPosition.x; x++)
-            {
-                for (int y = startPosition.y; y < endPosition.y; y++)
-                {
+        if (map.discoverTexture.GetPixel(start_position.x, start_position.y).r == 0.0f ||
+            map.discoverTexture.GetPixel(start_position.x, end_position.y).r == 0.0f ||
+            map.discoverTexture.GetPixel(end_position.x, start_position.y).r == 0.0f ||
+            map.discoverTexture.GetPixel(end_position.x, end_position.y).r == 0.0f ||
+            map.discoverTexture.GetPixel(Random.Range(start_position.x, end_position.x), Random.Range(start_position.y, end_position.y)).r == 0.0f) {
+            for (int x = start_position.x; x < end_position.x; x++) {
+                for (int y = start_position.y; y < end_position.y; y++) {
                     map.discoverTexture.SetPixel(x, y, new Color(1f, 1f, 1f));
                 }
             }
@@ -389,19 +341,15 @@ public static class MapMod
     // private
     //
 
-    private static void IL_HUD_Map_ItemMarker_Draw(ILContext context) // Option_ItemTracker
-    {
+    private static void IL_HUD_Map_ItemMarker_Draw(ILContext context) { // Option_ItemTracker
         // LogAllInstructions(context);
 
         ILCursor cursor = new(context);
-        if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<MMF>("cfgCreatureSense")))
-        {
+        if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<MMF>("cfgCreatureSense"))) {
             // draw item markers even when slug senses are disabled;
             Debug.Log("MapOptions: IL_HUD_Map_ItemMarker_Draw: Index " + cursor.Index); // 3
             cursor.RemoveRange(3);
-        }
-        else
-        {
+        } else {
             Debug.LogException(new System.Exception("MapOptions: IL_HUD_Map_ItemMarker_Draw failed."));
         }
 
@@ -412,63 +360,51 @@ public static class MapMod
     //
     //
 
-    private static float HUD_Map_Alpha(On.HUD.Map.orig_Alpha orig, Map map, int layer, float time_stacker, bool compensate_for_layers_in_front)
-    {
-        if (!Option_LayerFocus)
-        {
-            return orig(map, layer, time_stacker, compensate_for_layers_in_front);
-        }
-        else if (layer == map.depth) // no fade in/out effect when switching layers
-        {
+    private static float HUD_Map_Alpha(On.HUD.Map.orig_Alpha orig, Map map, int layer, float time_stacker, bool compensate_for_layers_in_front) {
+        if (!Option_LayerFocus) return orig(map, layer, time_stacker, compensate_for_layers_in_front);
+        if (layer == map.depth) {
+            // no fade in/out effect when switching layers
             return Mathf.Lerp(map.lastFade, map.fade, time_stacker);
         }
-        else
-        {
-            return 0.0f;
-        }
+        return 0.0f;
     }
 
-    private static void HUD_Map_ClearSprites(On.HUD.Map.orig_ClearSprites orig, Map map)
-    {
+    private static void HUD_Map_ClearSprites(On.HUD.Map.orig_ClearSprites orig, Map map) {
         // I am confused
         // this function detaches / deletes inFrontContainer and other suff; but does not destroys map like ResetMap() does
         // inFrontContainer is only set in ctor => map is an empty hull(?) anyways
         // maybe there are NullRef problems otherwise
         orig(map);
-        if (map.Get_Attached_Fields() is not AttachedFields attachedFields) return;
+        if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
 
-        foreach (Creature_Symbol_On_Map creature_symbol in attachedFields.creature_symbols)
-        {
+        foreach (Creature_Symbol_On_Map creature_symbol in attached_fields.creature_symbols) {
             creature_symbol.Remove_Sprites();
         }
 
-        foreach (Creature_Symbol_On_Map slugcat_symbol in attachedFields.slugcat_symbols)
-        {
+        foreach (Creature_Symbol_On_Map slugcat_symbol in attached_fields.slugcat_symbols) {
             slugcat_symbol.Remove_Sprites();
         }
 
-        attachedFields.creature_symbols.Clear();
-        attachedFields.slugcat_symbols.Clear();
-        all_attached_fields.Remove(map);
+        attached_fields.creature_symbols.Clear();
+        attached_fields.slugcat_symbols.Clear();
+        _all_attached_fields.Remove(map);
     }
 
-    private static void HUD_Map_Ctor(On.HUD.Map.orig_ctor orig, Map map, HUD.HUD hud, MapData map_data)
-    {
+    private static void HUD_Map_Ctor(On.HUD.Map.orig_ctor orig, Map map, HUD.HUD hud, MapData map_data) {
         orig(map, hud, map_data);
 
         // no arial maps
-        if (Option_AerialMap)
-        {
+        if (Option_AerialMap) {
             map.STANDARDELEMENTLIST[1] = false;
             map.STANDARDELEMENTLIST[2] = false;
         }
 
-        OwnerType ownerType = map.hud.owner.GetOwnerType();
-        if (ownerType != OwnerType.Player && ownerType != OwnerType.SleepScreen && ownerType != OwnerType.DeathScreen && (map.hud.owner is not Overseer overseer || !overseer.SafariOverseer)) return;
+        OwnerType owner_type = map.hud.owner.GetOwnerType();
+        if (owner_type != OwnerType.Player && owner_type != OwnerType.SleepScreen && owner_type != OwnerType.DeathScreen && (map.hud.owner is not Overseer overseer || !overseer.SafariOverseer)) return;
 
         // already initialized;
         if (map.Get_Attached_Fields() != null) return;
-        all_attached_fields.Add(map, new());
+        _all_attached_fields.Add(map, new());
 
         if (map.hud.rainWorld.processManager.currentMainLoop is not RainWorldGame game) return;
         if (!game.IsStorySession) return;
@@ -477,10 +413,8 @@ public static class MapMod
         Initialize_Slugcat_Symbols(map, game);
     }
 
-    private static void HUD_Map_Draw(On.HUD.Map.orig_Draw orig, Map map, float time_stacker)
-    {
-        if (map.slatedForDeletion || map.Get_Attached_Fields() is not AttachedFields attached_fields)
-        {
+    private static void HUD_Map_Draw(On.HUD.Map.orig_Draw orig, Map map, float time_stacker) {
+        if (map.slatedForDeletion || map.Get_Attached_Fields() is not AttachedFields attached_fields) {
             orig(map, time_stacker);
             return;
         }
@@ -488,8 +422,7 @@ public static class MapMod
         Focus_Layer(map, time_stacker);
         orig(map, time_stacker);
 
-        if (map.visible)
-        {
+        if (map.visible) {
             attached_fields.is_map_closed = false;
             Draw_Creature_Symbols(map, time_stacker);
             Draw_Slugcat_Symbols(map, time_stacker);
@@ -499,34 +432,28 @@ public static class MapMod
         if (attached_fields.is_map_closed) return;
         attached_fields.is_map_closed = true;
 
-        foreach (Creature_Symbol_On_Map creature_symbol in attached_fields.creature_symbols)
-        {
+        foreach (Creature_Symbol_On_Map creature_symbol in attached_fields.creature_symbols) {
             creature_symbol.Is_Visible = false;
         }
 
-        foreach (Creature_Symbol_On_Map slugcat_symbol in attached_fields.slugcat_symbols)
-        {
+        foreach (Creature_Symbol_On_Map slugcat_symbol in attached_fields.slugcat_symbols) {
             slugcat_symbol.Is_Visible = false;
         }
     }
 
-    private static void HUD_Map_RevealAllDiscovered(On.HUD.Map.orig_RevealAllDiscovered orig, Map map)
-    {
+    private static void HUD_Map_RevealAllDiscovered(On.HUD.Map.orig_RevealAllDiscovered orig, Map map) {
         // otherwise this lags the game while in-game text messages are displayed;
         if (map.hud.HideGeneralHud) return;
         orig(map);
     }
 
-    private static void HUD_Map_Update(On.HUD.Map.orig_Update orig, Map map)
-    {
-        if (map.slatedForDeletion)
-        {
+    private static void HUD_Map_Update(On.HUD.Map.orig_Update orig, Map map) {
+        if (map.slatedForDeletion) {
             orig(map);
             return;
         }
 
-        if (map.discLoaded && uncovered_rooms.Count > 0)
-        {
+        if (map.discLoaded && uncovered_rooms.Count > 0) {
             Uncover_Room(map, uncovered_rooms[0]);
             uncovered_rooms.RemoveAt(0);
         }
@@ -545,8 +472,7 @@ public static class MapMod
     //
     //
 
-    public sealed class AttachedFields
-    {
+    public sealed class AttachedFields {
         public bool is_map_closed;
         public bool is_map_loaded;
         public readonly List<Creature_Symbol_On_Map> creature_symbols = new();

@@ -2,33 +2,13 @@ using static MapOptions.MainMod;
 
 namespace MapOptions;
 
-internal static class RegionGateMod
-{
-    //
-    // variables
-    //
-
-    private static bool is_enabled = false;
-
-    //
-    //
-    //
-
-    internal static void On_Toggle()
-    {
-        is_enabled = !is_enabled;
-        if (Option_UncoverRoom)
-        {
-            if (is_enabled)
-            {
-                // the room stays the same 
-                // wait a bit and add the room again to be uncovered in the new region as well
-                On.RegionGate.Update += RegionGate_Update;
-            }
-            else
-            {
-                On.RegionGate.Update -= RegionGate_Update;
-            }
+internal static class RegionGateMod {
+    internal static void On_Config_Changed() {
+        On.RegionGate.Update -= RegionGate_Update;
+        if (Option_UncoverRoom) {
+            // the room stays the same 
+            // wait a bit and add the room again to be uncovered in the new region as well
+            On.RegionGate.Update += RegionGate_Update;
         }
     }
 
@@ -36,14 +16,12 @@ internal static class RegionGateMod
     // private
     //
 
-    private static void RegionGate_Update(On.RegionGate.orig_Update orig, RegionGate regionGate, bool eu)
-    {
-        orig(regionGate, eu);
+    private static void RegionGate_Update(On.RegionGate.orig_Update orig, RegionGate region_gate, bool eu) {
+        orig(region_gate, eu);
 
         // spams UncoverRoom() // its fine // once the pixels are uncovered the function just returns anyway
-        if (regionGate.mode == RegionGate.Mode.Waiting && !regionGate.waitingForWorldLoader && !MapMod.uncovered_rooms.Contains(regionGate.room.abstractRoom))
-        {
-            MapMod.uncovered_rooms.Add(regionGate.room.abstractRoom);
+        if (region_gate.mode == RegionGate.Mode.Waiting && !region_gate.waitingForWorldLoader && !MapMod.uncovered_rooms.Contains(region_gate.room.abstractRoom)) {
+            MapMod.uncovered_rooms.Add(region_gate.room.abstractRoom);
         }
     }
 }
