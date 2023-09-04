@@ -24,6 +24,7 @@ public static class MapMod {
     public static float Map_Scale => 10f / zoom_slider.Value;
     public static float Slugcat_Symbols_Scale => slugcat_symbol_scale.Value / 10f;
 
+    public static float Discover_Multiplier => 0.5f * discover_multiplier.Value;
     public static int Reveal_Speed_Multiplier => reveal_speed_multiplier.Value;
 
     //
@@ -397,6 +398,7 @@ public static class MapMod {
 
     private static void HUD_Map_Ctor(On.HUD.Map.orig_ctor orig, Map map, HUD.HUD hud, MapData map_data) {
         orig(map, hud, map_data);
+        map.DiscoverResolution = 7f * Discover_Multiplier;
 
         // no arial maps
         if (Option_AerialMap) {

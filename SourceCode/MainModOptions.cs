@@ -29,6 +29,8 @@ public class MainModOptions : OptionInterface {
     public static Configurable<int> zoom_slider = main_mod_options.config.Bind("zoom_slider", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10) zoom. Each value (5-15) corresponds to 10*value% (50%-150%) zoom..", new ConfigAcceptableRange<int>(5, 15), "", "Zoom Level (10)"));
     public static Configurable<int> creature_symbol_scale = main_mod_options.config.Bind("creature_symbol_scale", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new ConfigAcceptableRange<int>(5, 20), "", "Creature Symbol Size (10)"));
     public static Configurable<int> slugcat_symbol_scale = main_mod_options.config.Bind("slugcat_symbol_scale", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new ConfigAcceptableRange<int>(5, 20), "", "Slugcat Symbol Size (10)"));
+
+    public static Configurable<int> discover_multiplier = main_mod_options.config.Bind("discover_multiplier", defaultValue: 2, new ConfigurableInfo("The default value is two. For a given value X the map around slugcat is discovered (X/2)-times as far.\nWARNING: This will delete and change the size of any loaded region discover texture. The game tries to recover your map progress based on visited rooms.", new ConfigAcceptableRange<int>(1, 10), "", "Discover Multiplier (2)"));
     public static Configurable<int> reveal_speed_multiplier = main_mod_options.config.Bind("reveal_speed_multiplier", defaultValue: 1, new ConfigurableInfo("The default value is one. For a given value X the map is revealed X-times as fast.\nIf the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.", new ConfigAcceptableRange<int>(1, 10), "", "Reveal Speed Multiplier (1)"));
 
     //
@@ -86,10 +88,15 @@ public class MainModOptions : OptionInterface {
 
     public override void Initialize() {
         base.Initialize();
-        Tabs = new OpTab[1];
+        int number_of_tabs = 3;
+        Tabs = new OpTab[number_of_tabs];
+
+        //
+        // General
+        //
 
         int tab_index = 0;
-        Tabs[tab_index] = new OpTab(main_mod_options, "Options");
+        Tabs[tab_index] = new OpTab(main_mod_options, "General");
         InitializeMarginAndPos();
 
         // Title
@@ -107,30 +114,103 @@ public class MainModOptions : OptionInterface {
         AddNewLine();
         AddBox();
 
+        AddTextLabel("General:", FLabelAlignment.Left);
+        DrawTextLabels(ref Tabs[tab_index]);
+        AddNewLine();
+
         AddSlider(zoom_slider, (string)zoom_slider.info.Tags[0], "50%", "150%");
         DrawSliders(ref Tabs[tab_index]);
 
         AddNewLine();
 
         AddCheckBox(aerial_map, (string)aerial_map.info.Tags[0]);
-        AddCheckBox(creature_symbols, (string)creature_symbols.info.Tags[0]);
         AddCheckBox(item_tracker, (string)item_tracker.info.Tags[0]);
-
         AddCheckBox(layer_focus, (string)layer_focus.info.Tags[0]);
-        AddCheckBox(shadow_sprites, (string)shadow_sprites.info.Tags[0]);
+
         AddCheckBox(skip_fade, (string)skip_fade.info.Tags[0]);
-
-        AddCheckBox(slugcat_symbols, (string)slugcat_symbols.info.Tags[0]);
-        AddCheckBox(uncover_region, (string)uncover_region.info.Tags[0]);
         AddCheckBox(uncover_room, (string)uncover_room.info.Tags[0]);
+        DrawCheckBoxes(ref Tabs[tab_index]);
 
+        AddNewLine();
+
+        AddSlider(reveal_speed_multiplier, (string)reveal_speed_multiplier.info.Tags[0], "1", "10");
+        DrawSliders(ref Tabs[tab_index]);
+
+        DrawBox(ref Tabs[tab_index]);
+
+        //
+        // Symbols
+        //
+
+        ++tab_index;
+        Tabs[tab_index] = new OpTab(main_mod_options, "Symbols");
+        InitializeMarginAndPos();
+
+        // Title
+        AddNewLine();
+        AddTextLabel("MapOptions Mod", big_text: true);
+        DrawTextLabels(ref Tabs[tab_index]);
+
+        // Subtitle
+        AddNewLine(0.5f);
+        AddTextLabel("Version " + version, FLabelAlignment.Left);
+        AddTextLabel("by " + author, FLabelAlignment.Right);
+        DrawTextLabels(ref Tabs[tab_index]);
+
+        // Content //
+        AddNewLine();
+        AddBox();
+
+        AddTextLabel("Symbols:", FLabelAlignment.Left);
+        DrawTextLabels(ref Tabs[tab_index]);
+        AddNewLine();
+
+        AddCheckBox(creature_symbols, (string)creature_symbols.info.Tags[0]);
+        AddCheckBox(shadow_sprites, (string)shadow_sprites.info.Tags[0]);
+        AddCheckBox(slugcat_symbols, (string)slugcat_symbols.info.Tags[0]);
         DrawCheckBoxes(ref Tabs[tab_index]);
 
         AddNewLine();
 
         AddSlider(creature_symbol_scale, (string)creature_symbol_scale.info.Tags[0], "50%", "200%");
         AddSlider(slugcat_symbol_scale, (string)slugcat_symbol_scale.info.Tags[0], "50%", "200%");
-        AddSlider(reveal_speed_multiplier, (string)reveal_speed_multiplier.info.Tags[0], "1", "10");
+        DrawSliders(ref Tabs[tab_index]);
+
+        DrawBox(ref Tabs[tab_index]);
+
+        //
+        // Danger Zone
+        //
+
+        ++tab_index;
+        Tabs[tab_index] = new OpTab(main_mod_options, "Danger Zone");
+        InitializeMarginAndPos();
+
+        // Title
+        AddNewLine();
+        AddTextLabel("MapOptions Mod", big_text: true);
+        DrawTextLabels(ref Tabs[tab_index]);
+
+        // Subtitle
+        AddNewLine(0.5f);
+        AddTextLabel("Version " + version, FLabelAlignment.Left);
+        AddTextLabel("by " + author, FLabelAlignment.Right);
+        DrawTextLabels(ref Tabs[tab_index]);
+
+        // Content //
+        AddNewLine();
+        AddBox();
+
+        AddTextLabel("Danger Zone:", FLabelAlignment.Left);
+        DrawTextLabels(ref Tabs[tab_index]);
+        AddNewLine();
+
+        AddCheckBox(uncover_region, (string)uncover_region.info.Tags[0]);
+        DrawCheckBoxes(ref Tabs[tab_index]);
+
+        AddNewLine();
+
+        AddSlider(discover_multiplier, (string)discover_multiplier.info.Tags[0], "0.5", "5");
         DrawSliders(ref Tabs[tab_index]);
 
         DrawBox(ref Tabs[tab_index]);
@@ -141,6 +221,7 @@ public class MainModOptions : OptionInterface {
         Debug.Log(mod_id + ": Map_Scale " + Map_Scale);
         Debug.Log(mod_id + ": Slugcat_Symbols_Scale " + Slugcat_Symbols_Scale);
 
+        Debug.Log(mod_id + ": Discover_Multiplier " + Discover_Multiplier);
         Debug.Log(mod_id + ": Reveal_Speed_Multiplier " + Reveal_Speed_Multiplier);
         Debug.Log(mod_id + ": Can_Instant_Reveal " + Can_Instant_Reveal);
 
