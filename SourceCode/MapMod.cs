@@ -320,10 +320,13 @@ public static class MapMod {
     public static void Uncover_Room(Map map, AbstractRoom abstract_room) {
         if (map.discoverTexture == null) return;
 
-        // increase the area of rooms;
-        // otherwise some connections might not get immediately uncoverd;
-        IntVector2 start_position = IntVector2.FromVector2(map.OnTexturePos(new Vector2(-60f, -60f), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
-        IntVector2 end_position = IntVector2.FromVector2(map.OnTexturePos(abstract_room.size.ToVector2() * 20f + new Vector2(60f, 60f), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
+        // (I increased the area of rooms before; it looks ugly since it might show parts
+        // of adjecent rooms even when they are not overlapping; some rooms can have 
+        // connections that might not get uncovered on the map;) okay maybe it was just
+        // a rounding issue for end_position;
+        IntVector2 start_position = IntVector2.FromVector2(map.OnTexturePos(new(), abstract_room.index, accountForLayer: true) / map.DiscoverResolution);
+        Vector2 end_position_vector2 = map.OnTexturePos(abstract_room.size.ToVector2() * 20f, abstract_room.index, accountForLayer: true) / map.DiscoverResolution;
+        IntVector2 end_position = new(Mathf.CeilToInt(end_position_vector2.x), Mathf.CeilToInt(end_position_vector2.y));
 
         if (map.discoverTexture.GetPixel(start_position.x, start_position.y).r == 0.0f ||
             map.discoverTexture.GetPixel(start_position.x, end_position.y).r == 0.0f ||
@@ -332,7 +335,7 @@ public static class MapMod {
             map.discoverTexture.GetPixel(Random.Range(start_position.x, end_position.x), Random.Range(start_position.y, end_position.y)).r == 0.0f) {
             for (int x = start_position.x; x < end_position.x; x++) {
                 for (int y = start_position.y; y < end_position.y; y++) {
-                    map.discoverTexture.SetPixel(x, y, new Color(1f, 1f, 1f));
+                    map.discoverTexture.SetPixel(x, y, new Color(1f, 0f, 0f));
                 }
             }
         }
