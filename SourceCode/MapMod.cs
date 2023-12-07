@@ -234,7 +234,6 @@ public static class MapMod {
     public static void Initialize_Map_Variables(Map map) {
         if (!map.discLoaded) return;
         if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
-
         if (attached_fields.is_map_loaded) return;
         attached_fields.is_map_loaded = true;
 
@@ -250,6 +249,19 @@ public static class MapMod {
             map.playerMarker = null;
         }
         map.revealAllDiscovered = Can_Instant_Reveal;
+
+        // this messes with the reveal routine; this routine has problems when the
+        // connected area is too large; it might die out completely; on the flip
+        // side this uncovers the spaces between rooms as well; so it looks nicer
+        // when viewing the map;
+        // if (Option_UncoverRegion) {
+        //     for (int x = 0; x < map.mapTexture.width; ++x) {
+        //         for (int y = 0; y < map.mapTexture.height; ++y) {
+        //             if (map.mapTexture.GetPixel(x, y).g == 1f) continue;
+        //             map.discoverTexture.SetPixel(x, y, new Color(1f, 0f, 0f));
+        //         }
+        //     }
+        // }
     }
 
     public static void Initialize_Slugcat_Symbols(Map map, RainWorldGame game) {
