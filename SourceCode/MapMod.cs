@@ -436,6 +436,12 @@ public static class MapMod {
     }
 
     private static void HUD_Map_Draw(On.HUD.Map.orig_Draw orig, Map map, float time_stacker) {
+        // there is a bug where Shader.SetGlobalVector("_mapPan", ...) fails to be delivered(?)
+        // to the GPU; from what I tested it is still updated but "resets" at some point after
+        // this function; maybe due to an exception later on that is not logged;
+        // when it happens then the map_texture is not panned anymore during sleep or death
+        // screens; it seems that it has to do with the mod SplitScreen Co-op; I could not
+        // reproduce the bug when it is disabled;
         if (map.slatedForDeletion || map.Get_Attached_Fields() is not AttachedFields attached_fields) {
             orig(map, time_stacker);
             return;
