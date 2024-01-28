@@ -1,5 +1,7 @@
 using BepInEx;
 using MonoMod.Cil;
+using System.IO;
+using System.Reflection;
 using System.Security.Permissions;
 using UnityEngine;
 using static MapOptions.MainModOptions;
@@ -11,7 +13,7 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.5")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.6")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -19,21 +21,23 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.1.5";
+    public static readonly string version = "2.1.6";
+    public static readonly string mod_directory_path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName + Path.DirectorySeparatorChar;
 
     //
     // options
     //
 
     public static bool Option_AerialMap => aerial_map.Value;
+    public static bool Option_ClearExpeditionMaps => clear_expedition_maps.Value;
     public static bool Option_CreatureSymbols => creature_symbols.Value;
     public static bool Option_ItemTracker => item_tracker.Value;
 
     public static bool Option_LayerFocus => layer_focus.Value;
     public static bool Option_ShadowSprites => shadow_sprites.Value;
     public static bool Option_SkipFade => skip_fade.Value;
-
     public static bool Option_SlugcatSymbols => slugcat_symbols.Value;
+
     public static bool Option_UncoverRegion => uncover_region.Value;
     public static bool Option_UncoverRoom => uncover_room.Value;
 

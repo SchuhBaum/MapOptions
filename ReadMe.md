@@ -1,24 +1,26 @@
 ## MapOptions
-###### Version: 2.1.5
+###### Version: 2.1.6
 This is a mod for Rain World v1.9.
 
 ### Description
 Adds options to configure the map:  
 - `(Map Zoom)` The zoom can be adjusted (50%-150%).
 - `(Aerial Map)` When disabled, the default map shader is used in Chimney Canopy and Sky Islands.
+- `(Clear Expedition Maps)` When enabled, clears the map progress for each new expedition run. Warning: Map progress is saved even without completing a full cycle.
 - `(Creature Symbols)` These symbols display what creature types are present in each room.
+- `(Discover Multiplier)` Can be used to decrease or increase the map discover range around slugcat. Warning: This deletes your map progress first. The game tries to recover it but you might gain (or lose) map progress.
 - `(Item Tracker)` Tracked key items are shown on the map even when the option 'Slug Senses' is disabled. The option 'Key item tracking' needs to be enabled in Rain World Remix.
 - `(Layer Focus)` Only the active layer is displayed on the map.
 - `(Shadow Sprites)` Draws shadows for creature and slugcat symbols.
 - `(Skip Fade In/Out)` Pressing the map button shows the map with no delay.
 - `(Slugcat Symbols)` Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op Mod is enabled, draws a sprite for each player.
-- `(Uncover Region)` Once loaded into the game the whole region map gets uncovered.
+- `(Uncover Region)` Once loaded into the game the whole region map gets uncovered. Warning: Map progress is saved even without completing a full cycle.
 - `(Uncover Room)` When the player enters a room the whole room gets uncovered instead of just the area around slugcat.
 - `(Reveal Speed Multiplier)` For a given value X the map is revealed X-times as fast. If the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.5).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.6).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -34,7 +36,7 @@ There are two licenses available - MIT and Unlicense. You can choose which one y
 
 ### Changelog
 #### (Rain World v1.9)
-v2.1.5:
+v2.1.6:
 - Fixed a bug that could lag the game when you would try to open the map while an in-game text message is displayed.
 - (creature symbols) Fixed a bug where slugcat npc symbols would have the same color as the player.
 - (creature symbols) Fixed a bug where a NullReference exeption was thrown when the room of the creature could not be found.
@@ -42,6 +44,7 @@ v2.1.5:
 - Changed the hook initialization logic. This should reduce the log spam from IL hooks. Instead of doing it every cycle while in-game they are initialized when starting the game or when changing the options.
 - (discover multiplier) Added a slider to change the map discover radius around slugcat.
 - (uncover room) Potentially fixed an issue where adjacent non-overlapping rooms were partly getting uncovered as well.
+- (clear expedition maps) Added this options (disabled by default). Clears the map progress for each new expedition run.
 
 v2.1.0:
 - Added support for Rain World 1.9.

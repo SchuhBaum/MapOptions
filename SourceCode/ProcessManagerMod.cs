@@ -24,10 +24,11 @@ public static class ProcessManagerMod {
 
         main_mod_options.Log_All_Options();
         Debug.Log(mod_id + ": Initialize option specific hooks.");
-
         can_log_il_hooks = true;
+
         AbstractCreatureMod.On_Config_Changed();
         AbstractRoomMod.On_Config_Changed();
+        ExpeditionMod.On_Config_Changed();
         MapMod.On_Config_Changed();
 
         OverWorldMod.On_Config_Changed();

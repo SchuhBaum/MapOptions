@@ -1,7 +1,7 @@
 {
   "id": "MapOptions",
   "name": "MapOptions",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "authors": "SchuhBaum",
   "description": "Adds options to configure the map.",
   "requirements": [],

@@ -1,5 +1,4 @@
 using HUD;
-using IL;
 using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
@@ -9,6 +8,7 @@ using static HUD.HUD;
 using static HUD.Map;
 using static MapOptions.MainMod;
 using static MapOptions.MainModOptions;
+using static MapOptions.PlayerMod;
 
 namespace MapOptions;
 
@@ -226,7 +226,7 @@ public static class MapMod {
 
         foreach (AbstractCreature abstract_player in game.Players) {
             if (abstract_player.realizedCreature is Player player) {
-                PlayerMod.Remove_ObjectInStomach_Symbol(player);
+                Remove_ObjectInStomach_Symbol(player);
             }
         }
     }

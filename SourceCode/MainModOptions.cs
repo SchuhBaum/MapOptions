@@ -15,23 +15,28 @@ public class MainModOptions : OptionInterface {
     //
 
     public static Configurable<bool> aerial_map = main_mod_options.config.Bind("aerial_map", defaultValue: false, new ConfigurableInfo("The default map shader is used in Chimney Canopy and Sky Islands instead of the aerial map shader.", null, "", "Aerial Map"));
+    public static Configurable<bool> clear_expedition_maps = main_mod_options.config.Bind("clear_expedition_maps", defaultValue: false, new ConfigurableInfo("Clears the map progress for each new expedition run.\nWARNING: This progress is lost even without completing a full cycle.", null, "", "Clear Expedition Maps"));
     public static Configurable<bool> creature_symbols = main_mod_options.config.Bind("creature_symbols", defaultValue: true, new ConfigurableInfo("Creature symbols are added to the map. These symbols display what creature types are present in each room.", null, "", "Creature Symbols"));
     public static Configurable<bool> item_tracker = main_mod_options.config.Bind("item_tracker", defaultValue: true, new ConfigurableInfo("Tracked key items are shown on the map even when the option 'Slug Senses' is disabled. The option 'Key item tracking' needs to be enabled in Rain World Remix.", null, "", "Item Tracker"));
 
     public static Configurable<bool> layer_focus = main_mod_options.config.Bind("layer_focus", defaultValue: false, new ConfigurableInfo("Only the active layer is displayed on the map.", null, "", "Layer Focus"));
     public static Configurable<bool> shadow_sprites = main_mod_options.config.Bind("shadow_sprites", defaultValue: false, new ConfigurableInfo("Draws shadows for creature and slugcat symbols.", null, "", "Shadow Sprites"));
     public static Configurable<bool> skip_fade = main_mod_options.config.Bind("skip_fade", defaultValue: false, new ConfigurableInfo("Pressing the map button shows the map with no delay.", null, "", "Skip Fade In/Out"));
-
     public static Configurable<bool> slugcat_symbols = main_mod_options.config.Bind("slugcat_symbols", defaultValue: true, new ConfigurableInfo("Draws a slugcat sprite on the map instead of a red circle. When Jolly Co-Op is enabled, draws a sprite for each player.", null, "", "Slugcat Symbols"));
-    public static Configurable<bool> uncover_region = main_mod_options.config.Bind("uncover_region", defaultValue: false, new ConfigurableInfo("Once loaded into the game the whole region map gets uncovered.\nWARNING: This progress is saved (even without completing a cycle). Turning this option off after saving will *not* remove the gained progress.", null, "", "Uncover Region"));
+
+    public static Configurable<bool> uncover_region = main_mod_options.config.Bind("uncover_region", defaultValue: false, new ConfigurableInfo("Once loaded into the game the whole region map gets uncovered.\nWARNING: This progress is saved even without completing a full cycle.", null, "", "Uncover Region"));
     public static Configurable<bool> uncover_room = main_mod_options.config.Bind("uncover_room", defaultValue: true, new ConfigurableInfo("When the player enters a room the whole room gets uncovered instead of just the area around slugcat.", null, "", "Uncover Room"));
 
-    public static Configurable<int> zoom_slider = main_mod_options.config.Bind("zoom_slider", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10) zoom. Each value (5-15) corresponds to 10*value% (50%-150%) zoom..", new ConfigAcceptableRange<int>(5, 15), "", "Zoom Level (10)"));
+    //
+    //
+    //
+
     public static Configurable<int> creature_symbol_scale = main_mod_options.config.Bind("creature_symbol_scale", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new ConfigAcceptableRange<int>(5, 20), "", "Creature Symbol Size (10)"));
+    public static Configurable<int> discover_multiplier = main_mod_options.config.Bind("discover_multiplier", defaultValue: 2, new ConfigurableInfo("The default value is two. For a given value X the map around slugcat is discovered (X/2)-times as far.\nWARNING: This will delete and change the size of any loaded region discover texture. The game tries to recover your map progress based on visited rooms.", new ConfigAcceptableRange<int>(1, 10), "", "Discover Multiplier (2)"));
     public static Configurable<int> slugcat_symbol_scale = main_mod_options.config.Bind("slugcat_symbol_scale", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10). Each value (5-20) corresponds to 10*value% (50%-200%).", new ConfigAcceptableRange<int>(5, 20), "", "Slugcat Symbol Size (10)"));
 
-    public static Configurable<int> discover_multiplier = main_mod_options.config.Bind("discover_multiplier", defaultValue: 2, new ConfigurableInfo("The default value is two. For a given value X the map around slugcat is discovered (X/2)-times as far.\nWARNING: This will delete and change the size of any loaded region discover texture. The game tries to recover your map progress based on visited rooms.", new ConfigAcceptableRange<int>(1, 10), "", "Discover Multiplier (2)"));
     public static Configurable<int> reveal_speed_multiplier = main_mod_options.config.Bind("reveal_speed_multiplier", defaultValue: 1, new ConfigurableInfo("The default value is one. For a given value X the map is revealed X-times as fast.\nIf the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.", new ConfigAcceptableRange<int>(1, 10), "", "Reveal Speed Multiplier (1)"));
+    public static Configurable<int> zoom_slider = main_mod_options.config.Bind("zoom_slider", defaultValue: 10, new ConfigurableInfo("The default value is 100% (10) zoom. Each value (5-15) corresponds to 10*value% (50%-150%) zoom..", new ConfigAcceptableRange<int>(5, 15), "", "Zoom Level (10)"));
 
     //
     // parameters
@@ -205,6 +210,7 @@ public class MainModOptions : OptionInterface {
         DrawTextLabels(ref Tabs[tab_index]);
         AddNewLine();
 
+        AddCheckBox(clear_expedition_maps, (string)clear_expedition_maps.info.Tags[0]);
         AddCheckBox(uncover_region, (string)uncover_region.info.Tags[0]);
         DrawCheckBoxes(ref Tabs[tab_index]);
 
@@ -227,13 +233,14 @@ public class MainModOptions : OptionInterface {
 
         Debug.Log(mod_id + ": Option_AerialMap " + Option_AerialMap);
         Debug.Log(mod_id + ": Option_CreatureSymbols " + Option_CreatureSymbols);
+        Debug.Log(mod_id + ": Option_ClearExpeditionMaps " + Option_ClearExpeditionMaps);
         Debug.Log(mod_id + ": Option_ItemTracker " + Option_ItemTracker);
 
         Debug.Log(mod_id + ": Option_LayerFocus " + Option_LayerFocus);
         Debug.Log(mod_id + ": Option_ShadowSprites " + Option_ShadowSprites);
         Debug.Log(mod_id + ": Option_SkipFade " + Option_SkipFade);
-
         Debug.Log(mod_id + ": Option_SlugcatSymbols " + Option_SlugcatSymbols);
+
         Debug.Log(mod_id + ": Option_UncoverRegion " + Option_UncoverRegion);
         Debug.Log(mod_id + ": Option_UncoverRoom " + Option_UncoverRoom);
     }
