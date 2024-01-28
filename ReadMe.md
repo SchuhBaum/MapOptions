@@ -8,7 +8,7 @@ Adds options to configure the map:
 - `(Aerial Map)` When disabled, the default map shader is used in Chimney Canopy and Sky Islands.
 - `(Clear Expedition Maps)` When enabled, clears the map progress for each new expedition run. Warning: Map progress is saved even without completing a full cycle.
 - `(Creature Symbols)` These symbols display what creature types are present in each room.
-- `(Discover Multiplier)` Can be used to decrease or increase the map discover range around slugcat. Warning: This deletes your map progress first. The game tries to recover it but you might gain (or lose) map progress.
+- `(Discover Multiplier)` Can be used to decrease or increase the map discover range around slugcat. Warning: This deletes your map progress first. The game tries to recover your map progress based on visited rooms.
 - `(Item Tracker)` Tracked key items are shown on the map even when the option 'Slug Senses' is disabled. The option 'Key item tracking' needs to be enabled in Rain World Remix.
 - `(Layer Focus)` Only the active layer is displayed on the map.
 - `(Shadow Sprites)` Draws shadows for creature and slugcat symbols.
