@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.1.6
+###### Version: 2.1.7
 This is a mod for Rain World v1.9.
 
 ### Description
@@ -20,7 +20,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.6).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.7).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -36,7 +36,7 @@ There are two licenses available - MIT and Unlicense. You can choose which one y
 
 ### Changelog
 #### (Rain World v1.9)
-v2.1.6:
+v2.1.7:
 - Fixed a bug that could lag the game when you would try to open the map while an in-game text message is displayed.
 - (creature symbols) Fixed a bug where slugcat npc symbols would have the same color as the player.
 - (creature symbols) Fixed a bug where a NullReference exeption was thrown when the room of the creature could not be found.
@@ -45,6 +45,7 @@ v2.1.6:
 - (discover multiplier) Added a slider to change the map discover radius around slugcat.
 - (uncover room) Potentially fixed an issue where adjacent non-overlapping rooms were partly getting uncovered as well.
 - (clear expedition maps) Added this options (disabled by default). Clears the map progress for each new expedition run.
+- Fixed a vanilla bug, where the reveal routine can completely stop. This happened when too many pixels needed to be revealed.
 
 v2.1.0:
 - Added support for Rain World 1.9.

@@ -47,11 +47,13 @@ public static class MapMod {
     // the map is active outside of the game process;
     // OnToggle() is not enough;
     internal static void OnEnable() {
+        IL.HUD.Map.FadeRoutine += IL_HUD_Map_FadeRoutine;
+
         On.HUD.Map.Alpha += HUD_Map_Alpha;
         On.HUD.Map.ClearSprites += HUD_Map_ClearSprites;
         On.HUD.Map.ctor += HUD_Map_Ctor;
-        On.HUD.Map.Draw += HUD_Map_Draw;
 
+        On.HUD.Map.Draw += HUD_Map_Draw;
         On.HUD.Map.RevealAllDiscovered += HUD_Map_RevealAllDiscovered;
         On.HUD.Map.Update += HUD_Map_Update;
     }
@@ -71,6 +73,38 @@ public static class MapMod {
 
     //
     // public
+    //
+
+    private static void IL_HUD_Map_FadeRoutine(ILContext context) {
+        // LogAllInstructions(context);
+        ILCursor cursor = new(context);
+
+        if (cursor.TryGotoNext(
+            instruction => instruction.MatchLdfld("HUD.Map", "revealPixelsList"),
+            instruction => instruction.MatchCallvirt("System.Collections.Generic.List`1<RWCustom.IntVector2>", "get_Count")
+        )) {
+            //
+            // limit how slow the function FadeRoutine() can get; in vanilla is scales down 
+            // with increasing map.revealPixelsList.Count; 
+            //
+
+            if (can_log_il_hooks) {
+                Debug.Log(mod_id + ": IL_HUD_Map_FadeRoutine: Index " + cursor.Index); // 55
+            }
+
+            cursor.RemoveRange(2);
+            cursor.EmitDelegate<System.Func<Map, int>>((map) => Mathf.Min(100, map.revealPixelsList.Count));
+        } else {
+            if (can_log_il_hooks) {
+                Debug.Log(mod_id + ": IL_HUD_Map_FadeRoutine could not be applied.");
+            }
+            return;
+        }
+        // LogAllInstructions(context);
+    }
+
+    //
+    //
     //
 
     public static void Draw_Creature_Symbols(Map map, float time_stacker) {
@@ -254,6 +288,7 @@ public static class MapMod {
         // connected area is too large; it might die out completely; on the flip
         // side this uncovers the spaces between rooms as well; so it looks nicer
         // when viewing the map;
+        // IL_HUD_Map_FadeRoutine() should fix the dying out part;
         // if (Option_UncoverRegion) {
         //     for (int x = 0; x < map.mapTexture.width; ++x) {
         //         for (int y = 0; y < map.mapTexture.height; ++y) {
