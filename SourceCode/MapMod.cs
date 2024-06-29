@@ -1,4 +1,4 @@
-using HUD;
+﻿using HUD;
 using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
@@ -523,6 +523,15 @@ public static class MapMod {
 
         Skip_Fade(map); // Option_SkipFade
         orig(map);
+
+        // The problem is that you can pan the map when the map is not visible.
+        // The map resets when the resetRevealCounter hits zero. After that the
+        // panPos is reset to the player position on the map. When the map is
+        // visible the counter is kept at 100.
+        // The >0 check might prevent side effects.
+        if (map.resetRevealCounter > 0 && map.resetRevealCounter < 100) {
+            map.panPos = map.lastPanPos;
+        }
 
         // happens only once;
         // map needs to be loaded from disc first;
