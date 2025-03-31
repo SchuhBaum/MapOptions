@@ -1,6 +1,6 @@
 ## MapOptions
-###### Version: 2.1.8
-This is a mod for Rain World v1.9.
+###### Version: 2.1.9
+This is a mod for Rain World v1.10.
 
 ### Description
 Adds options to configure the map:  
@@ -20,7 +20,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.8).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.9).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -35,6 +35,10 @@ If you have feedback, you can message me on Discord `@schuhbaum` or write an ema
 See the file `LICENSE_MIT`.
 
 ### Changelog
+#### (Rain World v1.10)
+v2.1.9:
+- Added support for Rain World v1.10.
+
 #### (Rain World v1.9)
 v2.1.8:
 - Fixed a vanilla bug where the map would pan even when the map is not visible.

@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>2.1.8</Version>
+    <Version>2.1.9</Version>
     <Nullable>enable</Nullable>
-	  <LangVersion>10.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <Reference Include="..\..\references\PUBLIC-Assembly-CSharp.dll"/> -->
-    <Reference Include="..\..\references\STRIPPED-Assembly-CSharp.dll"/>
     <Reference Include="..\..\references\BepInEx.dll"/>
-    <Reference Include="..\..\references\HOOKS-Assembly-CSharp.dll"/>
-    
     <Reference Include="..\..\references\Mono.Cecil.dll"/>
     <Reference Include="..\..\references\MonoMod.Utils.dll"/>
+
+    <Reference Include="..\..\references\HOOKS-Assembly-CSharp.dll"/>
+    <Reference Include="..\..\references\PUBLIC-Assembly-CSharp.dll"/>
+
     <Reference Include="..\..\references\UnityEngine.dll"/>
     <Reference Include="..\..\references\UnityEngine.CoreModule.dll"/>
   </ItemGroup>
