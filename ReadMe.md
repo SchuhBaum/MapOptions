@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.1.9
+###### Version: 2.2.0
 This is a mod for Rain World v1.10.
 
 ### Description
@@ -19,8 +19,8 @@ Adds options to configure the map:
 - `(Reveal Speed Multiplier)` For a given value X the map is revealed X-times as fast. If the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.
 
 ### Installation
-0. Update Rain World to version 1.9 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.1.9).
+0. Update Rain World to version 1.10 if needed.
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.2.0).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -36,6 +36,12 @@ See the file `LICENSE_MIT`.
 
 ### Changelog
 #### (Rain World v1.10)
+v2.2.0:
+- (SplitScreen Co-op) Disabled map scaling. This fixes a bug where the icons and
+  map texture size misalign. The splitscreen mod sets and handles the map
+  texture.
+- (uncover region) Maybe fixed a bug where this option did not work in v1.10.
+
 v2.1.9:
 - Added support for Rain World v1.10.
 

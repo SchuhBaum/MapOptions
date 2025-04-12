@@ -4,6 +4,7 @@ using MoreSlugcats;
 using RWCustom;
 using System.Collections.Generic;
 using UnityEngine;
+
 using static HUD.HUD;
 using static HUD.Map;
 using static MapOptions.MainMod;
@@ -17,7 +18,7 @@ public static class MapMod {
     // parameters
     //
 
-    public static bool Is_Scaling_Enabled => !(Map_Scale == 1f);
+    public static bool Is_Scaling_Enabled => !(Map_Scale == 1f) && !is_split_screen_coop_enabled;
     public static bool Can_Instant_Reveal => Reveal_Speed_Multiplier == 10;
 
     public static float Creature_Symbols_Scale => creature_symbol_scale.Value / 10f;

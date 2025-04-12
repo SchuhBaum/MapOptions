@@ -2,7 +2,7 @@
   "Title": "MapOptions",
   "Description": "Adds options to configure the map.",
   "ID": "MapOptions",
-  "Version": "2.1.9",
+  "Version": "2.2.0",
   "TargetGameVersion": "v1.10.1",
   "Requirements": "",
   "RequirementNames": "",
@@ -13,5 +13,6 @@
     "Accessibility"
   ],
   "WorkshopID": 2923374705,
-  "UploadFilesOnly": true
+  "UploadFilesOnly": true,
+  "UploadThumbnail": false
 }

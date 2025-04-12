@@ -13,7 +13,7 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.1.9")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.2.0")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -21,7 +21,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.1.9";
+    public static readonly string version = "2.2.0";
     public static readonly string mod_directory_path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName + Path.DirectorySeparatorChar;
 
     //
@@ -40,6 +40,12 @@ public class MainMod : BaseUnityPlugin {
 
     public static bool Option_UncoverRegion => uncover_region.Value;
     public static bool Option_UncoverRoom => uncover_room.Value;
+
+    //
+    // other mods
+    //
+
+    public static bool is_split_screen_coop_enabled = false;
 
     //
     // variables
@@ -120,6 +126,19 @@ public class MainMod : BaseUnityPlugin {
         if (_is_initialized) return;
         _is_initialized = true;
         Debug.Log(mod_id + ": version " + version);
+
+        foreach (ModManager.Mod mod in ModManager.ActiveMods) {
+            if (mod.id == "henpemaz_splitscreencoop") {
+                is_split_screen_coop_enabled = true;
+                break;
+            }
+        }
+
+        if (is_split_screen_coop_enabled) {
+            Debug.Log(mod_id + ": SplitScreen Co-op found. Disable map scaling.");
+        } else {
+            Debug.Log(mod_id + ": SplitScreen Co-op not found.");
+        }
 
         can_log_il_hooks = true;
         MapMod.OnEnable();

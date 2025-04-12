@@ -1,14 +1,15 @@
+using UnityEngine;
 using static MapOptions.MainMod;
 
 namespace MapOptions;
 
 public static class OverWorldMod {
     internal static void On_Config_Changed() {
-        On.OverWorld.LoadWorld_string_Name_bool -= OverWorld_LoadWorld;
+        On.OverWorld.LoadWorld_string_Name_Timeline_bool -= OverWorld_LoadWorld;
         On.OverWorld.WorldLoaded -= OverWorld_WorldLoaded;
 
         if (Option_UncoverRegion) {
-            On.OverWorld.LoadWorld_string_Name_bool += OverWorld_LoadWorld; // load first region
+            On.OverWorld.LoadWorld_string_Name_Timeline_bool += OverWorld_LoadWorld; // load first region
             On.OverWorld.WorldLoaded += OverWorld_WorldLoaded; // change regions
         }
     }
@@ -29,8 +30,8 @@ public static class OverWorldMod {
     // private
     //
 
-    private static void OverWorld_LoadWorld(On.OverWorld.orig_LoadWorld_string_Name_bool orig, OverWorld over_world, string world_name, SlugcatStats.Name slugcat_name, bool single_room_world) {
-        orig(over_world, world_name, slugcat_name, single_room_world);
+    private static void OverWorld_LoadWorld(On.OverWorld.orig_LoadWorld_string_Name_Timeline_bool orig, OverWorld over_world, string world_name, SlugcatStats.Name slugcat_name, SlugcatStats.Timeline timeline, bool single_room_world) {
+        orig(over_world, world_name, slugcat_name, timeline, single_room_world);
 
         if (over_world.game == null) return;
         if (!over_world.game.IsStorySession) return;

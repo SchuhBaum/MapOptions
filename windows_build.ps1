@@ -2,7 +2,10 @@ $dir = $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 $config = "Release"
-dotnet build "$dir\sourcecode" -c $config
+dotnet build "$dir\sourcecode" -c $config -v:detailed
+if ($LASTEXITCODE) {
+    exit $LASTEXITCODE
+}
 
 $mod_name = "MapOptions"
 $dll_name = $mod_name + ".dll"

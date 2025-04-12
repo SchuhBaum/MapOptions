@@ -1,5 +1,7 @@
 
 .git
+.vscode
+tags
 
 SourceCode/bin
 SourceCode/obj
@@ -9,4 +11,3 @@ MapOptions/region_names*
 MapOptions.zip
 steam_description.txt
 
-.vscode
