@@ -1,12 +1,12 @@
 {
   "id": "MapOptions",
   "name": "MapOptions",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "authors": "SchuhBaum",
   "description": "Adds options to configure the map.",
   "requirements": [],
   "requirements_names": [],
-  "target_game_version": "v1.10.1",
+  "target_game_version": "v1.10",
   "tags": [
     "Accessibility",
     "Game Mechanics"

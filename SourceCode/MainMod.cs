@@ -13,7 +13,7 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.2.0")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.2.1")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -21,7 +21,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.2.0";
+    public static readonly string version = "2.2.1";
     public static readonly string mod_directory_path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName + Path.DirectorySeparatorChar;
 
     //

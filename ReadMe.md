@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.2.0
+###### Version: 2.2.1
 This is a mod for Rain World v1.10.
 
 ### Description
@@ -20,7 +20,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.10 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.2.0).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.2.1).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -36,6 +36,9 @@ See the file `LICENSE_MIT`.
 
 ### Changelog
 #### (Rain World v1.10)
+v2.2.1:
+- Changed the requirement to v1.10 instead of v1.10.1.
+
 v2.2.0:
 - (SplitScreen Co-op) Disabled map scaling. This fixes a bug where the icons and
   map texture size misalign. The splitscreen mod sets and handles the map
