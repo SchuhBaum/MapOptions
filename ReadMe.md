@@ -1,6 +1,6 @@
 ## MapOptions
-###### Version: 2.2.1
-This is a mod for Rain World v1.10.
+###### Version: 2.3.0
+This is a mod for Rain World v1.11.
 
 ### Description
 Adds options to configure the map:  
@@ -19,8 +19,8 @@ Adds options to configure the map:
 - `(Reveal Speed Multiplier)` For a given value X the map is revealed X-times as fast. If the maximum value is selected then opening the map displays known areas instantly instead of revealing them gradually.
 
 ### Installation
-0. Update Rain World to version 1.10 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.2.1).
+0. Update Rain World to version 1.11 if needed.
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.3.0).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -35,6 +35,11 @@ If you have feedback, you can message me on Discord `@schuhbaum` or write an ema
 See the file `LICENSE_MIT`.
 
 ### Changelog
+#### (Rain World v1.11)
+v2.3.0:
+- Bumped version requirement to v1.11.
+- Refactored the function `Draw_Slugcat_Symbols()`.
+
 #### (Rain World v1.10)
 v2.2.1:
 - Changed the requirement to v1.10 instead of v1.10.1.

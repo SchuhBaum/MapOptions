@@ -187,22 +187,29 @@ public static class MapMod {
         if (map.Get_Attached_Fields() is not AttachedFields attached_fields) return;
 
         foreach (Creature_Symbol_On_Map slugcat_symbol in attached_fields.slugcat_symbols) {
-            if (slugcat_symbol.abstract_creature.realizedCreature is not Player player || player.room == null) {
-                // hide non-realized player
-                // like in jollycoop when they are dead and in offscreen den
-                slugcat_symbol.Is_Visible = false;
-                continue;
+            bool hide_symbol = false;
+
+            // Hide non-realized player. For example, in jolly-coop when they
+            // are dead and in offscreen den (i.e. have no realized room).
+            // At least that was the case in RW v1.5.
+            Player? player = slugcat_symbol.abstract_creature.realizedCreature as Player;
+            if (player == null) hide_symbol = true;
+            else if (player.room == null) hide_symbol = true;
+
+            else if (slugcat_symbol.Abstract_Room is not AbstractRoom abstract_room) hide_symbol = true;
+            else if (abstract_room.world.DisabledMapRooms.Contains(abstract_room.name)) hide_symbol = true;
+
+            else {
+                IntVector2 on_reveal_texture_position = IntVector2.FromVector2(map.OnTexturePos(player.mainBodyChunk.pos, abstract_room.index, true) / map.DiscoverResolution);
+                Color pixel_color = map.revealTexture.GetPixel(on_reveal_texture_position.x, on_reveal_texture_position.y);
+
+                // Hide slugcats that are not revealed. This can only happen
+                // in multiplayer.
+                if (pixel_color.r < 0.5f) hide_symbol = true;
             }
 
-            if (slugcat_symbol.Abstract_Room == null) {
-                slugcat_symbol.Is_Visible = false;
-                continue;
-            }
-
-            IntVector2 on_reveal_texture_position = IntVector2.FromVector2(map.OnTexturePos(player.mainBodyChunk.pos, slugcat_symbol.Abstract_Room.index, true) / map.DiscoverResolution);
-            if (map.revealTexture.GetPixel(on_reveal_texture_position.x, on_reveal_texture_position.y).r < 0.5f) {
-                // hide symbols that are not revealed
-                // can only happen in multiplayer
+            // Another null check to make the compiler happy.
+            if (hide_symbol || player == null) {
                 slugcat_symbol.Is_Visible = false;
                 continue;
             }
