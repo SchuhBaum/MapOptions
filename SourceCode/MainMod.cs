@@ -1,11 +1,4 @@
-﻿using BepInEx;
-using MonoMod.Cil;
-using System.IO;
-using System.Reflection;
-using System.Security.Permissions;
-using UnityEngine;
-using static MapOptions.MainModOptions;
-
+﻿
 // allows access to private members;
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -13,7 +6,7 @@ using static MapOptions.MainModOptions;
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.3.0")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.3.1")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -21,7 +14,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.3.0";
+    public static readonly string version = "2.3.1";
     public static readonly string mod_directory_path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName + Path.DirectorySeparatorChar;
 
     //
@@ -29,7 +22,7 @@ public class MainMod : BaseUnityPlugin {
     //
 
     public static bool Option_AerialMap => aerial_map.Value;
-    public static bool Option_ClearExpeditionMaps => clear_expedition_maps.Value;
+    public static bool Option_ClearMapProgress => clear_map_progress.Value;
     public static bool Option_CreatureSymbols => creature_symbols.Value;
     public static bool Option_ItemTracker => item_tracker.Value;
 

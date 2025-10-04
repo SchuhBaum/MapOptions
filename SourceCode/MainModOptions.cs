@@ -1,9 +1,3 @@
-using Menu.Remix.MixedUI;
-using System.Collections.Generic;
-using UnityEngine;
-using static MapOptions.MainMod;
-using static MapOptions.MapMod;
-using static MapOptions.ProcessManagerMod;
 
 namespace MapOptions;
 
@@ -15,7 +9,7 @@ public class MainModOptions : OptionInterface {
     //
 
     public static Configurable<bool> aerial_map = main_mod_options.config.Bind("aerial_map", defaultValue: false, new ConfigurableInfo("The default map shader is used in Chimney Canopy and Sky Islands instead of the aerial map shader.", null, "", "Aerial Map"));
-    public static Configurable<bool> clear_expedition_maps = main_mod_options.config.Bind("clear_expedition_maps", defaultValue: false, new ConfigurableInfo("Clears the map progress for each new expedition run.\nWARNING: This progress is lost even without completing a full cycle.", null, "", "Clear Expedition Maps"));
+    public static Configurable<bool> clear_map_progress = main_mod_options.config.Bind("clear_map_progress", defaultValue: false, new ConfigurableInfo("Clears the map progress for each new campaign or expedition run.\nWARNING: This progress is lost even without completing a full cycle.", null, "", "Clear Map Progress"));
     public static Configurable<bool> creature_symbols = main_mod_options.config.Bind("creature_symbols", defaultValue: true, new ConfigurableInfo("Creature symbols are added to the map. These symbols display what creature types are present in each room.", null, "", "Creature Symbols"));
     public static Configurable<bool> item_tracker = main_mod_options.config.Bind("item_tracker", defaultValue: true, new ConfigurableInfo("Tracked key items are shown on the map even when the option 'Slug Senses' is disabled. The option 'Key item tracking' needs to be enabled in Rain World Remix.", null, "", "Item Tracker"));
 
@@ -210,7 +204,7 @@ public class MainModOptions : OptionInterface {
         DrawTextLabels(ref Tabs[tab_index]);
         AddNewLine();
 
-        AddCheckBox(clear_expedition_maps, (string)clear_expedition_maps.info.Tags[0]);
+        AddCheckBox(clear_map_progress, (string)clear_map_progress.info.Tags[0]);
         AddCheckBox(uncover_region, (string)uncover_region.info.Tags[0]);
         DrawCheckBoxes(ref Tabs[tab_index]);
 
@@ -232,8 +226,8 @@ public class MainModOptions : OptionInterface {
         Debug.Log(mod_id + ": Can_Instant_Reveal " + Can_Instant_Reveal);
 
         Debug.Log(mod_id + ": Option_AerialMap " + Option_AerialMap);
+        Debug.Log(mod_id + ": Option_ClearMapProgress " + Option_ClearMapProgress);
         Debug.Log(mod_id + ": Option_CreatureSymbols " + Option_CreatureSymbols);
-        Debug.Log(mod_id + ": Option_ClearExpeditionMaps " + Option_ClearExpeditionMaps);
         Debug.Log(mod_id + ": Option_ItemTracker " + Option_ItemTracker);
 
         Debug.Log(mod_id + ": Option_LayerFocus " + Option_LayerFocus);

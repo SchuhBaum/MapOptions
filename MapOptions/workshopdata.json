@@ -2,7 +2,7 @@
   "Title": "MapOptions",
   "Description": "Adds options to configure the map.",
   "ID": "MapOptions",
-  "Version": "2.3.0",
+  "Version": "2.3.1",
   "TargetGameVersion": "v1.11",
   "Requirements": "",
   "RequirementNames": "",

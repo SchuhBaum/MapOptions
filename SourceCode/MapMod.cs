@@ -1,16 +1,4 @@
-﻿using HUD;
-using MonoMod.Cil;
-using MoreSlugcats;
-using RWCustom;
-using System.Collections.Generic;
-using UnityEngine;
-
-using static HUD.HUD;
-using static HUD.Map;
-using static MapOptions.MainMod;
-using static MapOptions.MainModOptions;
-using static MapOptions.PlayerMod;
-
+﻿
 namespace MapOptions;
 
 public static class MapMod {

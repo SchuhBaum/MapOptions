@@ -1,8 +1,3 @@
-using UnityEngine;
-
-using static CreatureSymbol;
-using static MapOptions.MainMod;
-using static MapOptions.MapMod;
 
 namespace MapOptions;
 

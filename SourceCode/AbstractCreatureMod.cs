@@ -1,7 +1,3 @@
-using HUD;
-using System.Collections.Generic;
-using static MapOptions.MainMod;
-using static MapOptions.MapMod;
 
 namespace MapOptions;
 

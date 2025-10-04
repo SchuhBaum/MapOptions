@@ -1,4 +1,3 @@
-using static MapOptions.MainMod;
 
 namespace MapOptions;
 

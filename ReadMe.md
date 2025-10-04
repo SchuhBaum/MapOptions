@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.3.0
+###### Version: 2.3.1
 This is a mod for Rain World v1.11.
 
 ### Description
@@ -20,7 +20,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.11 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.3.0).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.3.1).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -36,6 +36,10 @@ See the file `LICENSE_MIT`.
 
 ### Changelog
 #### (Rain World v1.11)
+v2.3.1:
+- (clear map progress) Added this option (disabled by default). Clears the map progress of each new campaign or expedition run.
+- (clear expedition maps) Removed this option. Now, this is included in the option `clear map progress`.
+
 v2.3.0:
 - Bumped version requirement to v1.11.
 - Refactored the function `Draw_Slugcat_Symbols()`.

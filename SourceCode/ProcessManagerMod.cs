@@ -1,7 +1,3 @@
-using UnityEngine;
-using static MapOptions.MainMod;
-using static MapOptions.MainModOptions;
-using static ProcessManager;
 
 namespace MapOptions;
 
@@ -28,12 +24,12 @@ public static class ProcessManagerMod {
 
         AbstractCreatureMod.On_Config_Changed();
         AbstractRoomMod.On_Config_Changed();
-        ExpeditionMod.On_Config_Changed();
         MapMod.On_Config_Changed();
-
         OverWorldMod.On_Config_Changed();
+
         PlayerMod.On_Config_Changed();
         RegionGateMod.On_Config_Changed();
+        VisitedRegionTracker.On_Config_Changed();
         can_log_il_hooks = false;
     }
 
