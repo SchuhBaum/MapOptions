@@ -6,7 +6,7 @@
 
 namespace MapOptions;
 
-[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.3.1")]
+[BepInPlugin("SchuhBaum.MapOptions", "MapOptions", "2.3.2")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -14,7 +14,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "MapOptions";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "2.3.1";
+    public static readonly string version = "2.3.2";
     public static readonly string mod_directory_path = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName + Path.DirectorySeparatorChar;
 
     //

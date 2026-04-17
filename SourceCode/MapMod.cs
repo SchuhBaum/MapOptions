@@ -278,7 +278,9 @@ public static class MapMod {
             map.playerMarker?.ClearSprite();
             map.playerMarker = null;
         }
+
         map.revealAllDiscovered = Can_Instant_Reveal;
+        map.resetRevealCounter = 0;
 
         // this messes with the reveal routine; this routine has problems when the
         // connected area is too large; it might die out completely; on the flip
