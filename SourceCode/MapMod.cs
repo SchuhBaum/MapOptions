@@ -280,7 +280,13 @@ public static class MapMod {
         }
 
         map.revealAllDiscovered = Can_Instant_Reveal;
-        map.resetRevealCounter = 0;
+        if (map.revealAllDiscovered) {
+            // The order has changed in v1.11.8. You need to do this, but only
+            // when revealAllDiscovered is active. By default, the reveal will
+            // reset when you initialize the map for the first time. This is
+            // done after you revealed all discovered for some reason.
+            map.resetRevealCounter = 0;
+        }
 
         // this messes with the reveal routine; this routine has problems when the
         // connected area is too large; it might die out completely; on the flip

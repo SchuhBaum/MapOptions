@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>2.3.2</Version>
+    <Version>2.3.3</Version>
     <Nullable>enable</Nullable>
     <LangVersion>LatestMajor</LangVersion>
   </PropertyGroup>
