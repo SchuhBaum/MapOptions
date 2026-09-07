@@ -95,25 +95,25 @@ public class MainModOptions : OptionInterface {
         //
 
         int tab_index = 0;
-        Tabs[tab_index] = new OpTab(main_mod_options, "General");
+        Tabs[tab_index] = new OpTab(main_mod_options, MainMod.Translate("General"));
         InitializeMarginAndPos();
 
         // Title
         AddNewLine();
-        AddTextLabel("MapOptions Mod", big_text: true);
+        AddTextLabel(MainMod.Translate("MapOptions Mod"), big_text: true);
         DrawTextLabels(ref Tabs[tab_index]);
 
         // Subtitle
         AddNewLine(0.5f);
-        AddTextLabel("Version " + version, FLabelAlignment.Left);
-        AddTextLabel("by " + author, FLabelAlignment.Right);
+        AddTextLabel(string.Format(MainMod.Translate("Version {0}"), version), FLabelAlignment.Left);
+        AddTextLabel(string.Format(MainMod.Translate("by {0}"), author), FLabelAlignment.Right);
         DrawTextLabels(ref Tabs[tab_index]);
 
         // Content //
         AddNewLine();
         AddBox();
 
-        AddTextLabel("General:", FLabelAlignment.Left);
+        AddTextLabel(MainMod.Translate("General:"), FLabelAlignment.Left);
         DrawTextLabels(ref Tabs[tab_index]);
         AddNewLine();
 
@@ -142,25 +142,25 @@ public class MainModOptions : OptionInterface {
         //
 
         ++tab_index;
-        Tabs[tab_index] = new OpTab(main_mod_options, "Symbols");
+        Tabs[tab_index] = new OpTab(main_mod_options, MainMod.Translate("Symbols"));
         InitializeMarginAndPos();
 
         // Title
         AddNewLine();
-        AddTextLabel("MapOptions Mod", big_text: true);
+        AddTextLabel(MainMod.Translate("MapOptions Mod"), big_text: true);
         DrawTextLabels(ref Tabs[tab_index]);
 
         // Subtitle
         AddNewLine(0.5f);
-        AddTextLabel("Version " + version, FLabelAlignment.Left);
-        AddTextLabel("by " + author, FLabelAlignment.Right);
+        AddTextLabel(string.Format(MainMod.Translate("Version {0}"), version), FLabelAlignment.Left);
+        AddTextLabel(string.Format(MainMod.Translate("by {0}"), author), FLabelAlignment.Right);
         DrawTextLabels(ref Tabs[tab_index]);
 
         // Content //
         AddNewLine();
         AddBox();
 
-        AddTextLabel("Symbols:", FLabelAlignment.Left);
+        AddTextLabel(MainMod.Translate("Symbols:"), FLabelAlignment.Left);
         DrawTextLabels(ref Tabs[tab_index]);
         AddNewLine();
 
@@ -182,25 +182,25 @@ public class MainModOptions : OptionInterface {
         //
 
         ++tab_index;
-        Tabs[tab_index] = new OpTab(main_mod_options, "Danger Zone");
+        Tabs[tab_index] = new OpTab(main_mod_options, MainMod.Translate("Danger Zone"));
         InitializeMarginAndPos();
 
         // Title
         AddNewLine();
-        AddTextLabel("MapOptions Mod", big_text: true);
+        AddTextLabel(MainMod.Translate("MapOptions Mod"), big_text: true);
         DrawTextLabels(ref Tabs[tab_index]);
 
         // Subtitle
         AddNewLine(0.5f);
-        AddTextLabel("Version " + version, FLabelAlignment.Left);
-        AddTextLabel("by " + author, FLabelAlignment.Right);
+        AddTextLabel(string.Format(MainMod.Translate("Version {0}"), version), FLabelAlignment.Left);
+        AddTextLabel(string.Format(MainMod.Translate("by {0}"), author), FLabelAlignment.Right);
         DrawTextLabels(ref Tabs[tab_index]);
 
         // Content //
         AddNewLine();
         AddBox();
 
-        AddTextLabel("Danger Zone:", FLabelAlignment.Left);
+        AddTextLabel(MainMod.Translate("Danger Zone:"), FLabelAlignment.Left);
         DrawTextLabels(ref Tabs[tab_index]);
         AddNewLine();
 
@@ -272,7 +272,7 @@ public class MainModOptions : OptionInterface {
 
     private void AddCheckBox(Configurable<bool> configurable, string text) {
         _check_box_configurables.Add(configurable);
-        _check_boxes_text_labels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
+        _check_boxes_text_labels.Add(new OpLabel(new Vector2(), new Vector2(), MainMod.Translate(text), FLabelAlignment.Left));
     }
 
     private void DrawCheckBoxes(ref OpTab tab) { // changes pos.y but not pos.x
@@ -286,7 +286,7 @@ public class MainModOptions : OptionInterface {
         for (int check_box_index = 0; check_box_index < _check_box_configurables.Count; ++check_box_index) {
             Configurable<bool> configurable = _check_box_configurables[check_box_index];
             OpCheckBox check_box = new(configurable, new Vector2(pos_x, _position.y)) {
-                description = configurable.info?.description ?? ""
+                description = MainMod.Translate(configurable.info?.description ?? "")
             };
             tab.AddItems(check_box);
             pos_x += Check_Box_With_Spacing;
@@ -313,7 +313,7 @@ public class MainModOptions : OptionInterface {
 
     private void AddSlider(Configurable<int> configurable, string text, string slider_text_left = "", string slider_text_right = "") {
         _slider_configurables.Add(configurable);
-        _slider_main_text_labels.Add(text);
+        _slider_main_text_labels.Add(MainMod.Translate(text));
         _slider_text_labels_left.Add(new OpLabel(new Vector2(), new Vector2(), slider_text_left, alignment: FLabelAlignment.Right)); // set pos and size when drawing
         _slider_text_labels_right.Add(new OpLabel(new Vector2(), new Vector2(), slider_text_right, alignment: FLabelAlignment.Left));
     }
@@ -339,7 +339,7 @@ public class MainModOptions : OptionInterface {
             Configurable<int> configurable = _slider_configurables[slider_index];
             OpSlider slider = new(configurable, new Vector2(slider_center - 0.5f * slider_size_x, _position.y), (int)slider_size_x) {
                 size = new Vector2(slider_size_x, _font_height),
-                description = configurable.info?.description ?? ""
+                description = MainMod.Translate(configurable.info?.description ?? "")
             };
             tab.AddItems(slider);
 
