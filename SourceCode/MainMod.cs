@@ -58,6 +58,16 @@ public class MainMod : BaseUnityPlugin {
     // public
     //
 
+    public static string Translate(string text) {
+        if (string.IsNullOrEmpty(text)) return text;
+        // Short-string entries must remain on one physical line.
+        string key = text.Replace("\r\n", "\n").Replace("\n", "<LINE>");
+        string? translated = Custom.rainWorld?.inGameTranslator?.Translate(key);
+        return string.IsNullOrEmpty(translated) || translated == "!NO TRANSLATION!"
+            ? text
+            : translated!.Replace("<LINE>", "\n");
+    }
+
     public static void LogAllInstructions(ILContext? context, int index_string_length = 9, int op_code_string_length = 14) {
         if (context == null) return;
 
