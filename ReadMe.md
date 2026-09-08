@@ -1,5 +1,5 @@
 ## MapOptions
-###### Version: 2.3.3
+###### Version: 2.3.4
 This is a mod for Rain World v1.11.
 
 ### Description
@@ -20,7 +20,7 @@ Adds options to configure the map:
 
 ### Installation
 0. Update Rain World to version 1.11 if needed.
-1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.3.3).
+1. Download the file  `MapOptions.zip` from [Releases](https://github.com/SchuhBaum/MapOptions/releases/tag/v2.3.4).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -36,6 +36,9 @@ See the file `LICENSE_MIT`.
 
 ### Changelog
 #### (Rain World v1.11)
+v2.3.4:
+- (Contribution from Exmeow) Added Chinese translation.
+
 v2.3.3:
 - Fixed a bug where the map would not be initialized properly when in sleep
   screen or when starting a cycle.
