@@ -36,8 +36,8 @@ See the file `LICENSE_MIT`.
 
 ### Changelog
 #### (Rain World v1.11)
-v2.3.4:
-- (Contribution from Exmeow) Added Chinese translation.
+v2.3.4: (Contribution from the M.E.T. team)
+- Added Chinese translation.
 
 v2.3.3:
 - Fixed a bug where the map would not be initialized properly when in sleep
